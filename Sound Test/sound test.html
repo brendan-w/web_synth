@@ -13,10 +13,10 @@
 		function init(){
     	 	
     	 	try {
-    	 		if (typeof AudioContext !== undefined) {
+    	 		if (typeof AudioContext !== "undefined") {
     				ctx = new AudioContext();
 				}
-				else if (typeof webkitAudioContext !== undefined) {
+				else if (typeof webkitAudioContext !== "undefined") {
     				ctx = new webkitAudioContext();
 				}
 				else {
@@ -33,10 +33,17 @@
 		function run() {
 			var oscil = ctx.createOscillator();
 			oscil.connect(ctx.destination);
+			
+			//oscil.setWaveTable(waveTable);
+
 			oscil.type = "triangle";
-			oscil.frequency = 880;
+			oscil.frequency.value = 660;
+			
 			//runs it for 1 second
 			oscil.start(0);
+			setTimeout(function(){
+				oscil.frequency.value = 440;
+			}, 500);
 			setTimeout(function(){
 				oscil.stop(0);
 			}, 1000);

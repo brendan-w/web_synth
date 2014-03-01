@@ -1,0 +1,116 @@
+=========================================================
+Entry point
+=========================================================
+
+Main
+
+	parameters
+	----------------------------------
+	Synth					Synth object
+	Display					Display object
+	Data					Data object
+
+
+	functions
+	----------------------------------
+	init()					create synth/display/static objects
+	frame()					animation loop (distributes events to synth and display)
+
+
+
+=========================================================
+UI and display handling
+=========================================================
+
+Display
+
+	parameters
+	----------------------------------
+	Synth					Synth object
+	TrackDisplays[]			all TrackDisplay objects
+	startButton				DOM object
+	stopButton				DOM object
+
+
+	functions
+	----------------------------------
+	init()					attach event handlers
+	frame()					update the display
+
+
+	objects
+	----------------------------------
+	TrackDisplay
+		Track				corresponding audio track
+		PatternButtons[][]	DOM objects
+		startButton			DOM object
+		stopButton			DOM object
+		etc...
+
+
+=========================================================
+Sound generation
+=========================================================
+
+Synth
+	parameters
+	----------------------------------
+	Tracks[]				track list
+	AudioCtx				audio context
+	DestinationNode			audio destination
+	BPM						int
+
+
+
+	functions
+	----------------------------------
+	init()					setup/get audio context
+	addTrack()
+	deleteTrack(num)
+	start()
+	stop()
+
+
+
+	objects
+	----------------------------------
+	Track
+		Pattern[][]			boolean
+		OscillatorNodes[]	Oscillators
+		gainNode			gain
+		Tone				Wavetable (for oscillators)
+	
+		next()				advances to next note
+		setScale(scale[])	frequency list
+		setTone(waveTable)	wavetable for oscillator
+		setVolume()			set the gain
+
+
+=========================================================
+Static data
+=========================================================
+
+Data
+	parameters
+	----------------------------------
+	Scales[]				list of Scale objects
+	tones[]					list of Tone objects
+
+
+
+	functions
+	----------------------------------
+	init()					compute wavetables
+
+
+
+	objects
+	----------------------------------
+	Scale
+		name				eg. major/minor/lydian etc...
+		freq[]				table of frequencies for this scale
+
+	Tone
+		name
+		real				real component
+		imag				imaginary component
