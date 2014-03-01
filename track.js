@@ -4,8 +4,10 @@ var Track = function()
 	this.pattern = [];
 	this.oscillator_nodes = [];
 	this.gain_node;
-
 	this.running = true;
+	this.scale = 0;
+	this.key = 0;
+	this.octave = 4;
 
 	//display stuff
 	this.root;
@@ -17,7 +19,7 @@ var Track = function()
 	 */
 
 	//plays the specified beat in the measure
-	this.step = function(currentBeat)
+	this.step = function(beat)
 	{
 		if(this.running)
 		{
@@ -64,7 +66,7 @@ var Track = function()
 	 * Event Handlers for UI elements
 	 */
 
-	 
+
 	this.scaleChanged = function(e) {
 
 	};
@@ -90,9 +92,9 @@ var Track = function()
 
 		//addEventListers
 		/*
-		.addEventLister("change", setScale);
-		.addEventLister("change", setTone);
-		.addEventLister("change", setVolume);
+		.addEventLister("change", scaleChanged);
+		.addEventLister("change", toneChanged);
+		.addEventLister("change", volumeChanged);
 		*/
 
 	//end constructor------------------------------------------------

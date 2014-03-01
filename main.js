@@ -43,8 +43,6 @@ function step()
 	currentBeat = currentBeat % beatsPerMeasure;
 
 	setTimeout(step, waitTime);
-
-	console.log("beat");
 }
 
 
