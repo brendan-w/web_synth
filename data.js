@@ -1,0 +1,4 @@
+var data = {
+	scales:[],
+	tones:[]
+};

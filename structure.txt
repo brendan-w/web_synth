@@ -19,36 +19,6 @@ Main
 
 
 =========================================================
-UI and display handling
-=========================================================
-
-Display
-
-	parameters
-	----------------------------------
-	Synth					Synth object
-	TrackDisplays[]			all TrackDisplay objects
-	startButton				DOM object
-	stopButton				DOM object
-
-
-	functions
-	----------------------------------
-	init()					attach event handlers
-	frame()					update the display
-
-
-	objects
-	----------------------------------
-	TrackDisplay
-		Track				corresponding audio track
-		PatternButtons[][]	DOM objects
-		startButton			DOM object
-		stopButton			DOM object
-		etc...
-
-
-=========================================================
 Sound generation
 =========================================================
 
@@ -65,6 +35,7 @@ Synth
 	functions
 	----------------------------------
 	init()					setup/get audio context
+	frame()					update the display
 	addTrack()
 	deleteTrack(num)
 	start()
@@ -79,6 +50,11 @@ Synth
 		OscillatorNodes[]	Oscillators
 		gainNode			gain
 		Tone				Wavetable (for oscillators)
+		PatternButtons[][]	DOM objects
+		startButton			DOM object
+		stopButton			DOM object
+		etc...
+
 	
 		next()				advances to next note
 		setScale(scale[])	frequency list
