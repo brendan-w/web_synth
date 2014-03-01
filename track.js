@@ -1,16 +1,50 @@
 var Track = function()
 {
 	//sound stuff
-	this.pattern = [][];
+	this.pattern = [];
 	this.oscillator_nodes = [];
 	this.gain_node;
 
 	this.running = true;
-	this.noteSize = 1; //number of beats (note width)
 
 	//display stuff
 	this.root;
-	this.patternButtons = [][];
+	this.patternButtons = [];
+
+
+	/*
+	 * Public functions
+	 */
+
+	//plays the specified beat in the measure
+	this.step = function(currentBeat)
+	{
+		if(this.running)
+		{
+
+		}
+		else
+		{
+
+		}
+	};
+
+	//enables/disables playback of this track
+	this.setEnabled = function(value) {
+		if(value === true)
+		{
+			this.running = true;
+		}
+		else
+		{
+			this.running = false;
+		}
+	};
+
+
+	/*
+	 * Private functions
+	 */
 
 
 	this.setScale = function(scale) {
@@ -25,43 +59,46 @@ var Track = function()
 
 	};
 
-	this.step = function(currentBeat)
-	{
-		if(running)
-		{
 
-		}
-		else
-		{
+	/*
+	 * Event Handlers for UI elements
+	 */
 
-		}
+	 
+	this.scaleChanged = function(e) {
+
 	};
 
-	this.enabled = function(value)
-	{
-		if(value === true)
-		{
-			this.running = true;
-		}
-		else
-		{
-			this.running = false;
-		}
+	this.toneChanged = function(e) {
+
+	};
+
+	this.volumeChanged = function(e) {
+
 	};
 
 
 	//constructor----------------------------------------------------
+		//build the sound nodes
+
+
+
 		//build the html
 		this.root = document.createElement("section");
 
-		document.querySelector("#tracks").appendChild(this.root);
+		//document.querySelector("#tracks").appendChild(this.root);
 
-		//build the sound nodes
+		//addEventListers
+		/*
+		.addEventLister("change", setScale);
+		.addEventLister("change", setTone);
+		.addEventLister("change", setVolume);
+		*/
 
 	//end constructor------------------------------------------------
 
 	return {
-		next : this.step,
-		enabled : this.enabled
+		step: this.step,
+		setEnabled: this.setEnabled
 	};
 };
