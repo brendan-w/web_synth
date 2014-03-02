@@ -4,6 +4,7 @@ var audioCtx;
 var destination_node;
 var waitTime = getWaitTime();
 var currentBeat = 0;
+var addButton;
 
 
 function getAudioContext() {
@@ -22,6 +23,12 @@ function getAudioContext() {
 
 	destination_node = audioCtx.destination;
 	return true;
+}
+
+function listen()
+{
+	addButton = document.querySelector("#addTrack");
+	addButton.addEventListener("click", addTrack);
 }
 
 
@@ -52,7 +59,7 @@ function init() {
 	if(getAudioContext())
 	{
 		addTrack();
-		addTrack();
+		listen();
 		//beat();
 
 	}

@@ -1,5 +1,7 @@
 var Track = function()
 {
+	var _parent = this;
+
 	//sound stuff
 	this.running = true;
 	this.pattern; // = [][]
@@ -83,9 +85,9 @@ var Track = function()
 		var x = element.getAttribute("x");
 		var y = element.getAttribute("y");
 
-		pattern[y][x] = !pattern[y][x];
+		_parrent.pattern[y][x] = !_parrent.pattern[y][x];
 
-		if(pattern[y][x])
+		if(_parrent.pattern[y][x])
 		{
 			element.className = "on";
 		}
@@ -119,14 +121,16 @@ var Track = function()
 			this.oscillator_nodes[y].connect(this.gain_node);
 		}
 
-		//this.gain_node.connect(destination_node);
+		this.gain_node.connect(destination_node);
 
-		
+		//turn on a pleasent chord
+		/*
 		this.oscillator_nodes[0].start(0);
 		this.oscillator_nodes[3].start(0);
 		this.oscillator_nodes[5].start(0);
 		this.oscillator_nodes[7].start(0);
 		this.oscillator_nodes[10].start(0);
+		*/
 		
 
 		//build the html
