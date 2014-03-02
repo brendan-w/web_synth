@@ -3,10 +3,10 @@
  */
 
 var scales = [
-	//intervals = number of half steps
-	{name: "major", intervals:[2, 2, 1, 2, 2, 2, 1]},
-	{name: "minor", intervals:[2, 1, 2, 2, 1, 2, 2]},
-	{name: "blues", intervals:[3, 2, 1, 1, 3, 2]}
+	//intervals = number of half steps away from the root
+	{name: "Major", intervals:[0, 2, 4, 5, 7, 9, 11]},
+	{name: "Minor", intervals:[0, 2, 3, 5, 7, 8, 10]},
+	{name: "Blues", intervals:[0, 3, 5, 6, 7, 10]}
 ];
 var keys = [
 	//frequencies at octave 4
@@ -39,17 +39,34 @@ function getWaitTime() { return 60000 / beatsPerMinute; } //converts BPM to mill
 //takes a note on a given scale, and returns the frequency at that key and octave
 function getFrequency(note, scale, key, octave)
 {
-	var halfSteps = 0;
-	for(var i = 0; i < note; i++)
-	{
-		halfSteps += scales[scale].intervals[i];
-	}
+	//see if the note goes off the end of the scale, and add octave to accomodate
+	octave += Math.floor(note/scales[scale].intervals.length);
 
-	key = (key + halfSteps) % keys.length;
+	//loop back around if needed
+	note = note % scales[scale].intervals.length;
 
+	//get the number of half steps from the root
+	var halfSteps = scales[scale].intervals[note];
+
+	//how far is it from C4?
+	var steps = key + halfSteps
+
+	//shift up one octave if the key offset pushes it off the end of the list
+	octave += Math.floor(steps/keys.length);
+
+	//loop back around if needed
+	steps = steps % keys.length;
+
+	//base frequencies are at octave 4 (more likely to be precise)
+	octave -= 4;
+
+	//get the base frequency at this note
+	var freq = keys[steps].frequency;
+
+	//apply octave shift
+	freq = freq * Math.pow(2, octave);
 	
-
-	return ;
+	return freq;
 }
 
 //returns css for a different color (for as long as it can)
