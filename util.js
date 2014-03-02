@@ -5,24 +5,24 @@
 var scales = [
 	//intervals = number of half steps away from the root
 	{name: "Chromatic", intervals:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
-	{name: "Major", intervals:[0, 2, 4, 5, 7, 9, 11]},
-	{name: "Minor", intervals:[0, 2, 3, 5, 7, 8, 10]},
-	{name: "Blues", intervals:[0, 3, 5, 6, 7, 10]}
+	{name: "Major",     intervals:[0, 2, 4, 5, 7, 9, 11]},
+	{name: "Minor",     intervals:[0, 2, 3, 5, 7, 8, 10]},
+	{name: "Blues",     intervals:[0, 3, 5, 6, 7, 10]}
 ];
 var keys = [
 	//frequencies at octave 4
-	{name: "C", frequency: 261.63},
+	{name: "C",  frequency: 261.63},
 	{name: "C#", frequency: 277.18},
-	{name: "D", frequency: 293.66},
+	{name: "D",  frequency: 293.66},
 	{name: "D#", frequency: 311.13},
-	{name: "E", frequency: 329.63},
-	{name: "F", frequency: 349.23},
+	{name: "E",  frequency: 329.63},
+	{name: "F",  frequency: 349.23},
 	{name: "F#", frequency: 369.99},
-	{name: "G", frequency: 392.00},
+	{name: "G",  frequency: 392.00},
 	{name: "G#", frequency: 415.30},
-	{name: "A", frequency: 440.00},
+	{name: "A",  frequency: 440.00},
 	{name: "A#", frequency: 466.16},
-	{name: "B", frequency: 493.88}
+	{name: "B",  frequency: 493.88}
 ];
 var octaves = [
 	{name: "2", octave:2},
@@ -32,7 +32,12 @@ var octaves = [
 	{name: "6", octave:6},
 	{name: "7", octave:7}
 ];
-var tones = [];
+var tones = [
+	{name: "sine", real:[], imag:[]},
+	{name: "square", real:[], imag:[]},
+	{name: "saw", real:[], imag:[]},
+	{name: "triangle", real:[], imag:[]}
+];
 var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 120; //speed

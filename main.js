@@ -37,7 +37,6 @@ function addTrack() {
 }
 
 function deleteTrack(num) {
-	tracks[num].destruct();
 	tracks.splice(num, 1);
 }
 

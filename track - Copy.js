@@ -1,6 +1,6 @@
 var Track = function()
 {
-	var _this = this;
+	var _parent = this;
 
 	//sound stuff
 	this.running = true;
@@ -15,7 +15,6 @@ var Track = function()
 	this.keySelect;
 	this.octaveSelect;
 	this.scaleSelect;
-	this.toneSelect;
 
 
 	/*
@@ -48,19 +47,47 @@ var Track = function()
 	};
 
 
+	this.destruct = function() {
+		document.querySelector("#tracks").removeChild(this.root);
+	}
+
+	/*
+	 * Private functions
+	 */
+
+
+	this.updateScale = function() {
+		var key = this.keySelect.selectedIndex;
+		var octave = octaves[this.octaveSelect.selectedIndex].octave;
+		var scale = this.scaleSelect.selectedIndex;
+
+		for(var y = 0; y < notes; y++)
+		{
+			this.oscillator_nodes[y].frequency.value = getFrequency(y, key, octave, scale);
+		}
+	};
+
+	this.updateTone = function() {
+
+	};
+
+	this.updateVolume = function() {
+
+	};
+
+
 	/*
 	 * Event Handlers for UI elements
 	 */
-
 
 	this.matrixButtonClicked = function(e) {
 		var element = e.target;
 		var x = element.getAttribute("x");
 		var y = element.getAttribute("y");
 
-		_this.pattern[y][x] = !_this.pattern[y][x];
+		_parrent.pattern[y][x] = !_parrent.pattern[y][x];
 
-		if(_this.pattern[y][x])
+		if(_parrent.pattern[y][x])
 		{
 			element.className = "on";
 		}
@@ -71,41 +98,17 @@ var Track = function()
 
 	};
 
-	this.updateFrequencies = function(e) {
-		//get new information from the select dropdowns
-		var key = _this.keySelect.selectedIndex;
-		var octave = octaves[_this.octaveSelect.selectedIndex].octave;
-		var scale = _this.scaleSelect.selectedIndex;
-
-		//update the oscillators with their new frequencies
-		for(var y = 0; y < notes; y++)
-		{
-			                      //bottom = note 0
-			_this.oscillator_nodes[(notes - 1) - y].frequency.value = getFrequency(y, key, octave, scale);
-		}
-	};
-
-	this.updateTone = function(e) {
+	this.scaleChanged = function(e) {
 
 	};
 
-	this.updateVolume = function(e) {
+	this.toneChanged = function(e) {
 
 	};
 
-	this.destruct = function(e) {
-		//delete display objects
-		document.querySelector("#tracks").removeChild(_this.root);
-		//delete/disconnect audio objects
+	this.volumeChanged = function(e) {
 
-		//delete from tracks list
-		deleteTrack();
 	};
-
-
-	/*
-	 * Event Handlers for UI elements
-	 */
 
 
 	//constructor----------------------------------------------------
@@ -137,23 +140,15 @@ var Track = function()
 		var options = document.createElement("div");
 		this.root.appendChild(options);
 		options.className = "options";
-		options.innerHMTL = "Key - OCtave - Scale";
 
 		this.keySelect = makeSelect(keys, 0);
-		this.keySelect.addEventListener("change", this.updateFrequencies);
 		options.appendChild(this.keySelect);
 
 		this.octaveSelect = makeSelect(octaves, 2);
-		this.octaveSelect.addEventListener("change", this.updateFrequencies);
 		options.appendChild(this.octaveSelect);
 
-		this.scaleSelect = makeSelect(scales, 1);
-		this.scaleSelect.addEventListener("change", this.updateFrequencies);
+		this.scaleSelect = makeSelect(scales, 1)
 		options.appendChild(this.scaleSelect);
-
-		this.toneSelect = makeSelect(tones, 0);
-		this.toneSelect.addEventListener("change", this.updateTone);
-		options.appendChild(this.toneSelect);
 
 
 		//make the sequencer matrix
@@ -187,11 +182,11 @@ var Track = function()
 
 		document.querySelector("#tracks").appendChild(this.root);
 
-		this.updateFrequencies();
+		this.updateScale();
 
 	//end constructor------------------------------------------------
 
-	//return only public functions
+	//return only private functions, let the closures handle the rest
 	return {
 		beat: this.beat,
 		setEnabled: this.setEnabled
