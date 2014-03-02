@@ -19,7 +19,7 @@ var Track = function()
 	 */
 
 	//plays the specified beat in the measure
-	this.step = function(beat)
+	this.beat = function(beat)
 	{
 		if(this.running)
 		{
@@ -66,6 +66,9 @@ var Track = function()
 	 * Event Handlers for UI elements
 	 */
 
+	this.matrixButtonClicked = function(e) {
+
+	};
 
 	this.scaleChanged = function(e) {
 
@@ -88,19 +91,43 @@ var Track = function()
 		//build the html
 		this.root = document.createElement("section");
 
-		//document.querySelector("#tracks").appendChild(this.root);
+		//make the sequencer matrix
+		var table = document.createElement("table");
+		this.root.appendChild(table);
 
-		//addEventListers
+		for(var y = 0; y < notes; y++)
+		{
+			var tr = document.createElement("tr");
+			table.appendChild(tr);
+
+			for(var x = 0; x < beatsPerMeasure; x++)
+			{
+				var td = document.createElement("td");
+				tr.appendChild(td);
+
+				var button = document.createElement("div");
+				button.setAttribute("class", "matrixButton");
+				button.setAttribute("x", x);
+				button.setAttribute("y", y);
+				button.addEventListener("click", this.matrixButtonClicked);
+				td.appendChild(button);
+			}
+		}
+
+
+		document.querySelector("#tracks").appendChild(this.root);
+
+		//addEventListeners
 		/*
-		.addEventLister("change", scaleChanged);
-		.addEventLister("change", toneChanged);
-		.addEventLister("change", volumeChanged);
+		.addEventListener("change", scaleChanged);
+		.addEventListener("change", toneChanged);
+		.addEventListener("change", volumeChanged);
 		*/
 
 	//end constructor------------------------------------------------
 
 	return {
-		step: this.step,
+		beat: this.beat,
 		setEnabled: this.setEnabled
 	};
 };

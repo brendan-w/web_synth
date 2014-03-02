@@ -31,21 +31,21 @@ function deleteTrack(num) {
 
 }
 
-function step()
+function beat()
 {
 	for(var i = 0; i < tracks.length; i++)
 	{
-		tracks[i].step(currentBeat);
+		tracks[i].beat();
 	}
 
 	//advance the beat number, and loop off the end
 	currentBeat++;
 	currentBeat = currentBeat % beatsPerMeasure;
 
-	setTimeout(step, waitTime);
+	setTimeout(beat, waitTime);
 }
 
-
+/*
 function test() {
 	var oscil = audioCtx.createOscillator();
 	oscil.connect(audioCtx.destination);
@@ -92,14 +92,15 @@ function test() {
 		oscil.stop(0);
 	}, 1600);
 }
-
+*/
 
 function init() {
 	if(getAudioContext())
 	{
-		//addTrack();
-		//step();
-		test();
+		addTrack();
+		addTrack();
+		//beat();
+		//test();
 
 	}
 	else

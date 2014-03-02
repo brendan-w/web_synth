@@ -4,6 +4,7 @@
 
 var scales = [
 	//intervals = number of half steps away from the root
+	{name: "Chromatic", intervals:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]},
 	{name: "Major", intervals:[0, 2, 4, 5, 7, 9, 11]},
 	{name: "Minor", intervals:[0, 2, 3, 5, 7, 8, 10]},
 	{name: "Blues", intervals:[0, 3, 5, 6, 7, 10]}
@@ -24,7 +25,8 @@ var keys = [
 	{name: "B", frequency: 493.88}
 ];
 var tones = [];
-var beatsPerMeasure = 8; //matrix width
+var notes = 12; //matrix height
+var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 120; //speed
 
 
