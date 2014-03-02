@@ -24,6 +24,14 @@ var keys = [
 	{name: "A#", frequency: 466.16},
 	{name: "B", frequency: 493.88}
 ];
+var octaves = [
+	{name: "2", octave:2},
+	{name: "3", octave:3},
+	{name: "4", octave:4},
+	{name: "5", octave:5},
+	{name: "6", octave:6},
+	{name: "7", octave:7}
+];
 var tones = [];
 var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
@@ -39,7 +47,7 @@ var beatsPerMinute = 120; //speed
 function getWaitTime() { return 60000 / beatsPerMinute; } //converts BPM to milliseconds
 
 //takes a note on a given scale, and returns the frequency at that key and octave
-function getFrequency(note, scale, key, octave)
+function getFrequency(note, key, octave, scale)
 {
 	//see if the note goes off the end of the scale, and add octave to accomodate
 	octave += Math.floor(note/scales[scale].intervals.length);
@@ -70,6 +78,22 @@ function getFrequency(note, scale, key, octave)
 	
 	return freq;
 }
+
+function makeSelect(array, defaultIndex)
+{
+	var select = document.createElement("select");
+	for(var i = 0; i < array.length; i++)
+	{
+		var option = document.createElement("option");
+		select.appendChild(option);
+		option.innerHTML = array[i].name;
+		if(i === defaultIndex)
+		{
+			option.setAttribute("selected", "selected");
+		}
+	}
+	return select;
+};
 
 //returns css for a different color (for as long as it can)
 function colorForIndex(n)
