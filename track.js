@@ -1,6 +1,15 @@
+/*
+ * Track.js
+ *
+ * Class file for an audio track. Each track has its own note grid (this.pattern), and oscillator nodes for each note.
+ * This class handles its own UI, so generate your UI HMTL here. Only has one "public" function (beat()) which updates the sound/UI.
+ *
+ */
+
+
 var Track = function()
 {
-	var _this = this;
+	var _this = this; //needed because "this" in event handlers refers to the DOM element
 
 	//sound stuff
 	this.running = true;
@@ -18,12 +27,14 @@ var Track = function()
 	this.toneSelect;
 
 	//colors
+	/*
 	this.on;
 	this.off;
 	this.hoverOn;
 	this.hoverOff;
 	this.playOn;
 	this.playOff;
+	*/
 
 
 	/*

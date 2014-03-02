@@ -1,4 +1,14 @@
 /*
+ * Util.js
+ *
+ * File for settings and handy stuff. Core music theory settings/functions are found here.
+ * 
+ */
+
+
+
+
+/*
  * Data & Settings
  */
 
@@ -84,6 +94,7 @@ function getFrequency(note, key, octave, scale)
 	return freq;
 }
 
+//returns a new <select> element, with the supplied options
 function makeSelect(array, defaultIndex)
 {
 	var select = document.createElement("select");
