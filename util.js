@@ -101,7 +101,7 @@ function makeSelect(array, defaultIndex)
 };
 
 //returns css for a different color (for as long as it can)
-function colorForIndex(n)
+function colorForIndex(n, s, l)
 {
 	var val = n * 282;
 	val = mod(val, 360);

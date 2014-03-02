@@ -17,13 +17,21 @@ var Track = function()
 	this.scaleSelect;
 	this.toneSelect;
 
+	//colors
+	this.on;
+	this.off;
+	this.hoverOn;
+	this.hoverOff;
+	this.playOn;
+	this.playOff;
+
 
 	/*
 	 * Public functions
 	 */
 
 	//plays the specified beat in the measure
-	this.beat = function(beat)
+	this.beat = function()
 	{
 		if(this.running)
 		{
@@ -34,6 +42,12 @@ var Track = function()
 
 		}
 	};
+
+
+	/*
+	 * Event Handlers for UI elements
+	 */
+
 
 	//enables/disables playback of this track
 	this.setEnabled = function(value) {
@@ -46,12 +60,6 @@ var Track = function()
 			this.running = false;
 		}
 	};
-
-
-	/*
-	 * Event Handlers for UI elements
-	 */
-
 
 	this.matrixButtonClicked = function(e) {
 		var element = e.target;
@@ -102,10 +110,6 @@ var Track = function()
 		deleteTrack();
 	};
 
-
-	/*
-	 * Event Handlers for UI elements
-	 */
 
 
 	//constructor----------------------------------------------------
@@ -193,7 +197,6 @@ var Track = function()
 
 	//return only public functions
 	return {
-		beat: this.beat,
-		setEnabled: this.setEnabled
+		beat: this.beat
 	};
 };
