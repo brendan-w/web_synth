@@ -5,7 +5,7 @@
  *
  */
 
-
+"use strict";
 
 //audio objects
 var tracks = [];
@@ -53,6 +53,22 @@ function deleteTrack(num) {
 }
 
 
+function updateMatrixes(e) {
+	
+	beatsPerMeasure++;
+
+	console.log("before");
+
+	for(var i = 0; i < tracks.length; i++)
+	{
+		tracks[i].updateMatrix();
+	}
+
+	console.log("After");
+
+}
+
+
 //main loop for the site, fires on every beat (rate is set by BPM)
 function beat()
 {
@@ -79,6 +95,9 @@ function init() {
 		//make the button to add more tracks
 		addButton = document.querySelector("#addTrack");
 		addButton.addEventListener("click", addTrack);
+
+		//TEMPORARY testing purposes only
+		document.querySelector("#addBeat").addEventListener("click", updateMatrixes);
 
 		//set the wait milliseconds to the BPM setting in util.js
 		waitTime = getWaitTime();

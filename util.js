@@ -5,7 +5,7 @@
  * 
  */
 
-
+"use strict";
 
 
 /*
@@ -111,6 +111,8 @@ function make2D(ny, nx, defaultValue)
 	return array;
 }
 
+
+//debug only
 function print2D(array)
 {
 	var cy = array.length;

@@ -6,6 +6,7 @@
  *
  */
 
+"use strict";
 
 var Track = function()
 {
@@ -59,18 +60,18 @@ var Track = function()
 		}
 	};
 
-	this.sizeChanged = function() {
-		this.initPattern();
-		this.updateMatrix();
-	};
-
 
 	/*
 	 * Private functions
 	 */
 
+
 	//creates and dimensions the pattern buffer according to notes and beatsPerMeasure
-	this.initPattern = function() {
+	//builds the HTML for the button matrix (with values as given by pattern[y][x])
+	this.updateMatrix = function() {
+		
+		//DATA------------------------------------------
+
 		//check if there's already a pattern there
 		if(this.pattern === undefined)
 		{
@@ -80,20 +81,23 @@ var Track = function()
 		else
 		{
 			//its MAAAGICAL! (jk, probably has issues, don't run this yet)
-			thsi.pattern = resize2D(this.pattern,
+			this.pattern = resize2D(this.pattern,
 									notes,
 									beatsPerMeasure,
 									false,
 									true,
 									false);
 		}
-	};
 
-	//builds the HTML for the button matrix (with values as given by pattern[y][x])
-	this.updateMatrix = function() {
+
+		console.log(this.table);
+
+		//HTML------------------------------------------
+
 		//ditch anything that was there before
 		if(this.table === undefined)
 		{
+			console.log("making new table");
 			this.table = document.createElement("table");
 			this.root.appendChild(this.table);
 		}
@@ -104,6 +108,7 @@ var Track = function()
 			{
 				this.table.removeChild(this.table.firstChild);
 			}
+			console.log("cleared existing table");
 		}
 
 		this.patternButtons = new Array();
@@ -252,7 +257,6 @@ var Track = function()
 
 
 		//make the sequencer matrix
-		this.initPattern();
 		this.updateMatrix();
 
 		document.querySelector("#tracks").appendChild(this.root);
@@ -263,6 +267,7 @@ var Track = function()
 
 	//return only public functions
 	return {
-		beat: this.beat
+		beat: this.beat,
+		updateMatrix: this.updateMatrix
 	};
 };
