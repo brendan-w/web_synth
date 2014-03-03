@@ -14,6 +14,7 @@ var destination_node;
 
 //running vars
 var waitTime;
+var currentBeat = 0;
 
 //UI
 var addButton;
@@ -52,7 +53,7 @@ function deleteTrack(num) {
 }
 
 
-//main loop for the site, fires on every beat (rate is set by)
+//main loop for the site, fires on every beat (rate is set by BPM)
 function beat()
 {
 	setTimeout(beat, waitTime); //do this first because the code below takes time to run
@@ -75,7 +76,7 @@ function init() {
 		//make the first track
 		addTrack();
 
-		//make the button to add more
+		//make the button to add more tracks
 		addButton = document.querySelector("#addTrack");
 		addButton.addEventListener("click", addTrack);
 

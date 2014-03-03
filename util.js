@@ -94,47 +94,65 @@ function getFrequency(note, key, octave, scale)
 	return freq;
 }
 
+
+//function that makes a 2D array, and fills it with default values
+function make2D(ny, nx, defaultValue)
+{
+	var array = new Array();
+	for(var y = 0; y < ny; y++)
+	{
+		array[y] = new Array();
+		for(var x = 0; x < nx; x++)
+		{
+			array[y][x] = defaultValue;
+		}
+	}
+
+	return array;
+}
+
+
 /*
  * function for resizing a row-major 2D array, while maintaining the existing data
  *
  * array = row-major 2D array
- * y, x = new array dimensions
+ * ny, nx = new array dimensions
  * yEnd = adds and deletes new elements at END of y-axis (set false to operate at the beginning)
  * XEnd = adds and deletes new elements at END of x-axis (set false to operate at the beginning)
- * default = default value for new elements
+ * defaultValue = default value for new elements
  */
-function resize2D(array, y, x, yEnd, xEnd, default) {
+function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 	if(array)
 	{
+		//pre-flight checks
+		if(yEnd === undefined) { yEnd = true; }
+		if(xEnd === undefined) { xEnd = true; }
+		if(defaultValue === undefined) { defaultValue = 0; }
+
 		//get the current dimensions of the array
 		var cy = array.length;
 		var cx = array[0].length;
 
-		//compute deltas
-		var dy = y - cy;
-		var dx = x - cx;
+		//create the new array with the new dimensions
+		var newArray = make2D(ny, nx, defaultValue);
 
-		//4 cases
-		if(dy > 0)
+		//fill the new array with the old values from the source array
+		for(var y = 0; y < array.length; y++)
 		{
-			//add more y
+			for(var x = 0; x < array[0].length; x++)
+			{
+				var destY = y;
+				var destX = x;
+				if(!yEnd) { dest = ny - cy + y; }
+				if(!xEnd) { dest = nx - cx + x; }
+				if((destY >= 0) && (destX >= 0))
+				{
+					newArray[destY][destX] = array[y][x];
+				}
+			}
 		}
-		else if(dy < 0)
-		{
-			//delete some y
 
-			array.splice()
-		}
-
-		if(dx > 0)
-		{
-			//add more x
-		}
-		else if(dx < 0)
-		{
-			//delete some x
-		}
-	}	
+	}
 }
 
 //returns a new <select> element, with the supplied options

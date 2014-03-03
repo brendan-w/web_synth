@@ -18,7 +18,6 @@ var Track = function()
 
 	//running vars
 	this.running = true;
-	this.currentBeat = 0;
 	this.pattern; // = [][]  (booleans)
 
 	//display stuff
@@ -50,20 +49,13 @@ var Track = function()
 	{
 		if(this.running)
 		{
-
 			//give UI feedback
-
-			this.currentBeat++;
-			this.currentBeat = this.currentBeat % this.beats;
 		}
 		else
 		{
 			//turn off sound
 
 			//turn off UI feedback
-
-			//reset currentBeat
-			this.currentBeat = 0;
 		}
 	};
 
@@ -77,27 +69,17 @@ var Track = function()
 	 * Private functions
 	 */
 
-	//creates and dimensions the pattern buffer according to 
+	//creates and dimensions the pattern buffer according to notes and beatsPerMeasure
 	this.initPattern = function() {
 		//check if there's already a pattern there
 		if(this.pattern === undefined)
 		{
 			//create an empty pattern
-			this.pattern = new Array();
-
-			for(var y = 0; y < notes; y++)
-			{
-				this.pattern[y] = new Array();
-	
-				for(var x = 0; x < beatsPerMeasure; x++)
-				{
-					this.pattern[y][x] = false;
-				}
-			}
+			this.pattern = make2D(notes, beatsPerMeasure, false);
 		}
 		else
 		{
-			//its MAAAGICAL!
+			//its MAAAGICAL! (jk, probably has issues, don't run this yet)
 			resize2D(this.pattern,
 					 notes,
 					 beatsPerMeasure,
