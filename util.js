@@ -111,6 +111,28 @@ function make2D(ny, nx, defaultValue)
 	return array;
 }
 
+function print2D(array)
+{
+	var cy = array.length;
+	var cx = array[0].length;
+
+	for(var y = 0; y < cy; y++)
+	{
+		var line = "";
+		for(var x = 0; x < cx; x++)
+		{
+			if(array[y][x])
+			{
+				line += "1_";
+			}
+			else
+			{
+				line += "0_";
+			}
+		}
+		console.log(line);
+	}
+}
 
 /*
  * function for resizing a row-major 2D array, while maintaining the existing data
@@ -137,14 +159,14 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 		var newArray = make2D(ny, nx, defaultValue);
 
 		//fill the new array with the old values from the source array
-		for(var y = 0; y < array.length; y++)
+		for(var y = 0; y < cy; y++)
 		{
-			for(var x = 0; x < array[0].length; x++)
+			for(var x = 0; x < cx; x++)
 			{
 				var destY = y;
 				var destX = x;
-				if(!yEnd) { dest = ny - cy + y; }
-				if(!xEnd) { dest = nx - cx + x; }
+				if(!yEnd) { destY = ny - cy + y; }
+				if(!xEnd) { destX = nx - cx + x; }
 				if((destY >= 0) && (destX >= 0))
 				{
 					newArray[destY][destX] = array[y][x];
@@ -152,6 +174,7 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 			}
 		}
 
+		return newArray;
 	}
 }
 

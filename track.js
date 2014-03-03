@@ -80,12 +80,12 @@ var Track = function()
 		else
 		{
 			//its MAAAGICAL! (jk, probably has issues, don't run this yet)
-			resize2D(this.pattern,
-					 notes,
-					 beatsPerMeasure,
-					 false,
-					 true,
-					 false);
+			thsi.pattern = resize2D(this.pattern,
+									notes,
+									beatsPerMeasure,
+									false,
+									true,
+									false);
 		}
 	};
 
