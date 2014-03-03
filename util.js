@@ -43,9 +43,9 @@ var octaves = [
 	{name: "7", octave:7}
 ];
 var tones = [
-	{name: "sine", real:[], imag:[]},
-	{name: "square", real:[], imag:[]},
-	{name: "saw", real:[], imag:[]},
+	{name: "sine",     real:[], imag:[]},
+	{name: "square",   real:[], imag:[]},
+	{name: "saw",      real:[], imag:[]},
 	{name: "triangle", real:[], imag:[]}
 ];
 var notes = 12; //matrix height
@@ -94,7 +94,51 @@ function getFrequency(note, key, octave, scale)
 	return freq;
 }
 
+/*
+ * function for resizing a row-major 2D array, while maintaining the existing data
+ *
+ * array = row-major 2D array
+ * y, x = new array dimensions
+ * yEnd = adds and deletes new elements at END of y-axis (set false to operate at the beginning)
+ * XEnd = adds and deletes new elements at END of x-axis (set false to operate at the beginning)
+ * default = default value for new elements
+ */
+function resize2D(array, y, x, yEnd, xEnd, default) {
+	if(array)
+	{
+		//get the current dimensions of the array
+		var cy = array.length;
+		var cx = array[0].length;
+
+		//compute deltas
+		var dy = y - cy;
+		var dx = x - cx;
+
+		//4 cases
+		if(dy > 0)
+		{
+			//add more y
+		}
+		else if(dy < 0)
+		{
+			//delete some y
+
+			array.splice()
+		}
+
+		if(dx > 0)
+		{
+			//add more x
+		}
+		else if(dx < 0)
+		{
+			//delete some x
+		}
+	}	
+}
+
 //returns a new <select> element, with the supplied options
+//looks at the .name property of array elements
 function makeSelect(array, defaultIndex)
 {
 	var select = document.createElement("select");

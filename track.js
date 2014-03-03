@@ -12,15 +12,19 @@ var Track = function()
 	var _this = this; //needed because "this" in event handlers refers to the DOM element
 
 	//sound stuff
-	this.running = true;
-	this.pattern; // = [][]
-	this.oscillator_nodes = [];
+	this.oscillator_nodes = []; //one oscillator for each pitch
 	this.gain_node;
 	this.compressor_node;
 
+	//running vars
+	this.running = true;
+	this.currentBeat = 0;
+	this.pattern; // = [][]  (booleans)
+
 	//display stuff
 	this.root;
-	this.patternButtons = [];
+	this.table;
+	this.patternButtons; // = [][]  (table cells)
 	this.keySelect;
 	this.octaveSelect;
 	this.scaleSelect;
@@ -47,18 +51,112 @@ var Track = function()
 		if(this.running)
 		{
 
+			//give UI feedback
+
+			this.currentBeat++;
+			this.currentBeat = this.currentBeat % this.beats;
 		}
 		else
 		{
+			//turn off sound
 
+			//turn off UI feedback
+
+			//reset currentBeat
+			this.currentBeat = 0;
 		}
 	};
+
+	this.sizeChanged = function() {
+		this.initPattern();
+		this.updateMatrix();
+	};
+
+
+	/*
+	 * Private functions
+	 */
+
+	//creates and dimensions the pattern buffer according to 
+	this.initPattern = function() {
+		//check if there's already a pattern there
+		if(this.pattern === undefined)
+		{
+			//create an empty pattern
+			this.pattern = new Array();
+
+			for(var y = 0; y < notes; y++)
+			{
+				this.pattern[y] = new Array();
+	
+				for(var x = 0; x < beatsPerMeasure; x++)
+				{
+					this.pattern[y][x] = false;
+				}
+			}
+		}
+		else
+		{
+			//its MAAAGICAL!
+			resize2D(this.pattern,
+					 notes,
+					 beatsPerMeasure,
+					 false,
+					 true,
+					 false);
+		}
+	};
+
+	//builds the HTML for the button matrix (with values as given by pattern[y][x])
+	this.updateMatrix = function() {
+		//ditch anything that was there before
+		if(this.table === undefined)
+		{
+			this.table = document.createElement("table");
+			this.root.appendChild(this.table);
+		}
+		else
+		{
+			//empty its contents
+			while(this.table.firstChild)
+			{
+				this.table.removeChild(this.table.firstChild);
+			}
+		}
+
+		this.patternButtons = new Array();
+
+		//build the new table
+		for(var y = 0; y < this.pattern.length; y++)
+		{
+			//create the table row
+			var tr = document.createElement("tr");
+			this.table.appendChild(tr);
+			this.patternButtons[y] = new Array();
+
+			for(var x = 0; x < this.pattern[y].length; x++)
+			{
+				//create the table cell
+				var td = document.createElement("td");
+				tr.appendChild(td);
+				this.patternButtons[y][x] = td;
+
+				//create the button graphic
+				var button = document.createElement("div");
+				button.className = "off";
+				button.setAttribute("x", x);
+				button.setAttribute("y", y);
+				button.addEventListener("click", this.matrixButtonClicked);
+				td.appendChild(button);
+			}
+		}
+	};
+
 
 
 	/*
 	 * Event Handlers for UI elements
 	 */
-
 
 	//enables/disables playback of this track
 	this.setEnabled = function(value) {
@@ -172,33 +270,8 @@ var Track = function()
 
 
 		//make the sequencer matrix
-		var table = document.createElement("table");
-		this.root.appendChild(table);
-
-		this.pattern = new Array();
-
-		for(var y = 0; y < notes; y++)
-		{
-			var tr = document.createElement("tr");
-			table.appendChild(tr);
-
-			this.pattern[y] = new Array();
-
-			for(var x = 0; x < beatsPerMeasure; x++)
-			{
-				var td = document.createElement("td");
-				tr.appendChild(td);
-
-				this.pattern[y][x] = false;
-
-				var button = document.createElement("div");
-				button.className = "off";
-				button.setAttribute("x", x);
-				button.setAttribute("y", y);
-				button.addEventListener("click", this.matrixButtonClicked);
-				td.appendChild(button);
-			}
-		}
+		this.initPattern();
+		this.updateMatrix();
 
 		document.querySelector("#tracks").appendChild(this.root);
 
