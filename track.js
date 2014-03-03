@@ -73,15 +73,15 @@ var Track = function()
 		//DATA------------------------------------------
 
 		//check if there's already a pattern there
-		if(this.pattern === undefined)
+		if(_this.pattern === undefined)
 		{
 			//create an empty pattern
-			this.pattern = make2D(notes, beatsPerMeasure, false);
+			_this.pattern = make2D(notes, beatsPerMeasure, false);
 		}
 		else
 		{
 			//its MAAAGICAL! (jk, probably has issues, don't run this yet)
-			this.pattern = resize2D(this.pattern,
+			_this.pattern = resize2D(_this.pattern,
 									notes,
 									beatsPerMeasure,
 									false,
@@ -90,53 +90,57 @@ var Track = function()
 		}
 
 
-		console.log(this.table);
+		console.log(_this.table);
 
 		//HTML------------------------------------------
 
 		//ditch anything that was there before
-		if(this.table === undefined)
+		if(_this.table === undefined)
 		{
 			console.log("making new table");
-			this.table = document.createElement("table");
-			this.root.appendChild(this.table);
+			_this.table = document.createElement("table");
+			_this.root.appendChild(_this.table);
 		}
 		else
 		{
+			console.log("deleting old contents");
 			//empty its contents
-			while(this.table.firstChild)
+			while(_this.table.firstChild)
 			{
-				this.table.removeChild(this.table.firstChild);
+				_this.table.removeChild(_this.table.firstChild);
 			}
-			console.log("cleared existing table");
 		}
 
-		this.patternButtons = new Array();
+		console.log("begin making HTML");
+
+		_this.patternButtons = new Array();
 
 		//build the new table
-		for(var y = 0; y < this.pattern.length; y++)
+		for(var y = 0; y < _this.pattern.length; y++)
 		{
 			//create the table row
 			var tr = document.createElement("tr");
-			this.table.appendChild(tr);
-			this.patternButtons[y] = new Array();
+			_this.table.appendChild(tr);
+			_this.patternButtons[y] = new Array();
 
-			for(var x = 0; x < this.pattern[y].length; x++)
+			for(var x = 0; x < _this.pattern[y].length; x++)
 			{
 				//create the table cell
 				var td = document.createElement("td");
 				tr.appendChild(td);
-				this.patternButtons[y][x] = td;
+				_this.patternButtons[y][x] = td;
 
 				//create the button graphic
 				var button = document.createElement("div");
 				button.className = "off";
 				button.setAttribute("x", x);
 				button.setAttribute("y", y);
-				button.addEventListener("click", this.matrixButtonClicked);
+				button.addEventListener("click", _this.matrixButtonClicked);
 				td.appendChild(button);
 			}
 		}
+
+		console.log("done making HTML");
 	};
 
 
@@ -255,11 +259,10 @@ var Track = function()
 		this.toneSelect.addEventListener("change", this.updateTone);
 		options.appendChild(this.toneSelect);
 
+		document.querySelector("#tracks").appendChild(this.root);
 
 		//make the sequencer matrix
 		this.updateMatrix();
-
-		document.querySelector("#tracks").appendChild(this.root);
 
 		this.updateFrequencies();
 
