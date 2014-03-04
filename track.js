@@ -15,7 +15,7 @@ var Track = function()
 	//sound stuff
 	this.oscillator_nodes = []; //one oscillator for each pitch
 	this.gain_nodes = []; //unfortunately, you can only call .start(0) ONCE, so gains are used to turn notes on & off
-	this.gain_node;
+	this.master_gain_node;
 	this.compressor_node;
 
 	//running vars
@@ -234,10 +234,22 @@ var Track = function()
 
 	};
 
+	//self destruct in five, four, three, tw**BOOM**
 	this.destruct = function(e) {
 		//delete display objects
 		document.querySelector("#tracks").removeChild(_this.root);
+
 		//delete/disconnect audio objects
+		for(var y = 0; y < notes; y++)
+		{
+			_this.oscillator_nodes[y].stop(0); //shut-up
+			_this.oscillator_nodes[y] = undefined; //destroy all the evidence
+			_this.gain_nodes[y] = undefined;
+		}
+
+		_this.master_gain_node = undefined;
+		_this.compressor_node = undefined;
+		//etc... for all audio nodes we use
 
 		//delete from tracks list
 		deleteTrack();
@@ -248,21 +260,21 @@ var Track = function()
 	//constructor--------------------------------------------------------------
 		
 		//SOUND-------------------------------------------
-		this.gain_node = audioCtx.createGain();
+		this.master_gain_node = audioCtx.createGain();
 
 		for(var y = 0; y < notes; y++)
 		{
 			this.oscillator_nodes[y] = audioCtx.createOscillator();
 			this.gain_nodes[y] = audioCtx.createGain();
 			this.oscillator_nodes[y].connect(this.gain_nodes[y]);
-			this.gain_nodes[y].connect(this.gain_node);
+			this.gain_nodes[y].connect(this.master_gain_node);
 
 			this.gain_nodes[y].gain.value = 0;
 			this.oscillator_nodes[y].start(0);
 
 		}
 
-		this.gain_node.connect(destination_node);
+		this.master_gain_node.connect(destination_node);
 
 
 		//HTML--------------------------------------------
