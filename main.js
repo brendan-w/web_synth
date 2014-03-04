@@ -55,17 +55,12 @@ function deleteTrack(num) {
 
 function updateMatrixes(e) {
 	
-	beatsPerMeasure++;
-
-	console.log("before");
+	beatsPerMeasure--;
 
 	for(var i = 0; i < tracks.length; i++)
 	{
 		tracks[i].updateMatrix();
 	}
-
-	console.log("After");
-
 }
 
 

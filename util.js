@@ -169,9 +169,12 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 				var destX = x;
 				if(!yEnd) { destY = ny - cy + y; }
 				if(!xEnd) { destX = nx - cx + x; }
-				if((destY >= 0) && (destX >= 0))
+				if((destY >= 0) && (destX >= 0)) //if it doesn't fall off the lower bounds
 				{
-					newArray[destY][destX] = array[y][x];
+					if((destY < ny) && (destX < nx)) //if it doesn't fall off the upper bounds
+					{
+						newArray[destY][destX] = array[y][x];
+					}
 				}
 			}
 		}

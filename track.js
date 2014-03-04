@@ -90,28 +90,22 @@ var Track = function()
 		}
 
 
-		console.log(_this.table);
-
 		//HTML------------------------------------------
 
 		//ditch anything that was there before
 		if(_this.table === undefined)
 		{
-			console.log("making new table");
 			_this.table = document.createElement("table");
 			_this.root.appendChild(_this.table);
 		}
 		else
 		{
-			console.log("deleting old contents");
 			//empty its contents
 			while(_this.table.firstChild)
 			{
 				_this.table.removeChild(_this.table.firstChild);
 			}
 		}
-
-		console.log("begin making HTML");
 
 		_this.patternButtons = new Array();
 
@@ -132,15 +126,20 @@ var Track = function()
 
 				//create the button graphic
 				var button = document.createElement("div");
-				button.className = "off";
 				button.setAttribute("x", x);
 				button.setAttribute("y", y);
+				if(_this.pattern[y][x])
+				{
+					button.className = "on";
+				}
+				else
+				{
+					button.className = "off";
+				}
 				button.addEventListener("click", _this.matrixButtonClicked);
 				td.appendChild(button);
 			}
 		}
-
-		console.log("done making HTML");
 	};
 
 
