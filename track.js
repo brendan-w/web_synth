@@ -14,23 +14,26 @@ var Track = function()
 
 	//sound stuff
 	this.oscillator_nodes = []; //one oscillator for each pitch
+	this.gain_nodes = []; //unfortunately, you can only call .start(0) ONCE, so gains are used to turn notes on & off
 	this.gain_node;
 	this.compressor_node;
 
 	//running vars
-	this.running = true;
-	this.pattern; // = [][]  (booleans)
+	this.running = false;
+	this.pattern; // = [][]  (booleans) the actual melody matrix
 
 	//display stuff
 	this.root;
 	this.table;
-	this.patternButtons; // = [][]  (table cells)
+	this.patternButtons; // = [][]  (table cells) needed for playback color changes
 	this.keySelect;
 	this.octaveSelect;
 	this.scaleSelect;
 	this.toneSelect;
 
 	//colors
+	//TODO: use util -> colorForIndex() to give each track a unique color
+	//is there a way to do it without adding 3 eventlisteners to every freakin' button?
 	/*
 	this.on;
 	this.off;
@@ -48,16 +51,44 @@ var Track = function()
 	//plays the specified beat in the measure
 	this.beat = function()
 	{
-		if(this.running)
+		if(_this.running)
 		{
+			//turn the oscillators on/off
+			for(var y = 0; y < notes; y++)
+			{
+				var noteGain = _this.gain_nodes[y];
+				var newState = _this.pattern[y][currentBeat];
+				var oldState = _this.pattern[y][mod((currentBeat - 1), beatsPerMeasure)]; //used mod() because of possible negative values
+
+				if(newState !== oldState) //only switch nodes if their state changes
+				{
+					if(_this.pattern[y][currentBeat])
+					{
+						noteGain.gain.value = 1;
+					}
+					else
+					{
+						noteGain.gain.value = 0;
+					}
+				}
+			}
+
 			//give UI feedback
 		}
 		else
 		{
 			//turn off sound
-
+			for(var y = 0; y < notes; y++)
+			{
+				_this.gain_nodes[y].gain.value = 0;
+			}
 			//turn off UI feedback
 		}
+	};
+
+	//general update function, called when an external setting was changed by the user
+	this.update = function() {
+		_this.updateMatrix();
 	};
 
 
@@ -80,7 +111,7 @@ var Track = function()
 		}
 		else
 		{
-			//its MAAAGICAL! (jk, probably has issues, don't run this yet)
+			//its MAAAGICAL!
 			_this.pattern = resize2D(_this.pattern,
 									notes,
 									beatsPerMeasure,
@@ -128,6 +159,8 @@ var Track = function()
 				var button = document.createElement("div");
 				button.setAttribute("x", x);
 				button.setAttribute("y", y);
+
+				//make the HTML match the data
 				if(_this.pattern[y][x])
 				{
 					button.className = "on";
@@ -136,6 +169,7 @@ var Track = function()
 				{
 					button.className = "off";
 				}
+
 				button.addEventListener("click", _this.matrixButtonClicked);
 				td.appendChild(button);
 			}
@@ -152,11 +186,11 @@ var Track = function()
 	this.setEnabled = function(value) {
 		if(value === true)
 		{
-			this.running = true;
+			_this.running = true;
 		}
 		else
 		{
-			this.running = false;
+			_this.running = false;
 		}
 	};
 
@@ -188,7 +222,7 @@ var Track = function()
 		for(var y = 0; y < notes; y++)
 		{
 			                      //bottom = note 0
-			_this.oscillator_nodes[(notes - 1) - y].frequency.value = getFrequency(y, key, octave, scale);
+			_this.oscillator_nodes[invert(y, notes)].frequency.value = getFrequency(y, key, octave, scale);
 		}
 	};
 
@@ -211,29 +245,27 @@ var Track = function()
 
 
 
-	//constructor----------------------------------------------------
-		//build the sound nodes
+	//constructor--------------------------------------------------------------
+		
+		//SOUND-------------------------------------------
 		this.gain_node = audioCtx.createGain();
 
 		for(var y = 0; y < notes; y++)
 		{
 			this.oscillator_nodes[y] = audioCtx.createOscillator();
-			this.oscillator_nodes[y].connect(this.gain_node);
+			this.gain_nodes[y] = audioCtx.createGain();
+			this.oscillator_nodes[y].connect(this.gain_nodes[y]);
+			this.gain_nodes[y].connect(this.gain_node);
+
+			this.gain_nodes[y].gain.value = 0;
+			this.oscillator_nodes[y].start(0);
+
 		}
 
 		this.gain_node.connect(destination_node);
 
-		//turn on a pleasent chord
-		/*
-		this.oscillator_nodes[0].start(0);
-		this.oscillator_nodes[3].start(0);
-		this.oscillator_nodes[5].start(0);
-		this.oscillator_nodes[7].start(0);
-		this.oscillator_nodes[10].start(0);
-		*/
-		
 
-		//build the html
+		//HTML--------------------------------------------
 		this.root = document.createElement("section");
 
 		//make lefthand option pane
@@ -258,18 +290,21 @@ var Track = function()
 		this.toneSelect.addEventListener("change", this.updateTone);
 		options.appendChild(this.toneSelect);
 
-		document.querySelector("#tracks").appendChild(this.root);
-
 		//make the sequencer matrix
 		this.updateMatrix();
 
+		//setup the oscillators with their frequencies
 		this.updateFrequencies();
 
-	//end constructor------------------------------------------------
+		//add the finished track to the page
+		document.querySelector("#tracks").appendChild(this.root);
+		this.running = true;
+
+	//end constructor----------------------------------------------------------
 
 	//return only public functions
 	return {
 		beat: this.beat,
-		updateMatrix: this.updateMatrix
+		update: this.update
 	};
 };

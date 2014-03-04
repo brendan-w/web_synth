@@ -48,6 +48,7 @@ var tones = [
 	{name: "saw",      real:[], imag:[]},
 	{name: "triangle", real:[], imag:[]}
 ];
+
 var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 120; //speed
@@ -60,6 +61,8 @@ var beatsPerMinute = 120; //speed
  */
 
 function getWaitTime() { return 60000 / beatsPerMinute; } //converts BPM to milliseconds
+
+function invert(n, max) { return (max - 1) - n; } //inverts a 0-x value to x-0
 
 //takes a note on a given scale, and returns the frequency at that key and octave
 function getFrequency(note, key, octave, scale)
@@ -202,6 +205,7 @@ function makeSelect(array, defaultIndex)
 };
 
 //returns css for a different color (for as long as it can)
+//n = 0, 1, 2, 3...
 function colorForIndex(n, s, l)
 {
 	var val = n * 282;

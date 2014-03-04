@@ -58,7 +58,7 @@ footer
 }
 
 
-#addBeat
+#test
 {
 	margin-left:auto;
 	margin-right:auto;
@@ -72,7 +72,7 @@ footer
 	border-radius: 3px;
 }
 
-#addBeat:hover
+#test:hover
 {
 	background-color: rgb(50,110,50);
 	cursor:pointer;
@@ -124,6 +124,6 @@ td > div
 
 td > div.off:hover { background-color: rgb(80,80,80) !important; }
 td > div.on:hover { background-color: rgb(90,170,90) !important; }
-td > div.on { background-color: rgb(50,110,50); }
-td > div.off { background-color: rgb(50,55,50); }
+td > div.on { background-color: rgb(50,120,50); }
+td > div.off { background-color: rgb(50,60,50); }
 td > div.play { background-color: rgb(60,255,60); }
