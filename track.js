@@ -21,6 +21,7 @@ var Track = function()
 	//running vars
 	this.running = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
+	this.bakedPattern //the points at which the notes turn on and off  -1 = off, 1 = on, 0 = no change
 
 	//display stuff
 	this.root;
@@ -53,26 +54,20 @@ var Track = function()
 	{
 		if(_this.running)
 		{
-
-			//TEMPORARY, runs a little slow, i'll speed it up later
 			for(var y = 0; y < notes; y++)
 			{
-				//turn the oscillators on/off
-				var noteGain = _this.gain_nodes[y];
 				var oldBeat = mod((currentBeat - 1), beatsPerMeasure); //used mod() because of possible negative values
 				var newState = _this.pattern[y][currentBeat];
 				var oldState = _this.pattern[y][oldBeat];
 
-				if(newState !== oldState) //only switch nodes if their state changes
+				//turn the oscillators on/off
+				if(_this.bakedPattern[y][currentBeat])
 				{
-					if(newState)
-					{
-						noteGain.gain.value = 1;
-					}
-					else
-					{
-						noteGain.gain.value = 0;
-					}
+					_this.gain_nodes[y].gain.value = 1;
+				}
+				else
+				{
+					_this.gain_nodes[y].gain.value = 0;
 				}
 
 				//give UI feedback
@@ -110,6 +105,7 @@ var Track = function()
 	//general update function, called when an external setting was changed by the user
 	this.update = function() {
 		_this.updateMatrix();
+		_this.bakePattern();
 	};
 
 
@@ -129,6 +125,7 @@ var Track = function()
 		{
 			//create an empty pattern
 			_this.pattern = make2D(notes, beatsPerMeasure, false);
+			_this.bakedPattern = make2D(notes, beatsPerMeasure, 0);
 		}
 		else
 		{
@@ -139,6 +136,12 @@ var Track = function()
 									false,
 									true,
 									false);
+			_this.bakedPattern = resize2D(_this.bakedPattern,
+										  notes,
+										  beatsPerMeasure,
+										  false,
+										  true,
+										  0);
 		}
 
 
@@ -197,6 +200,39 @@ var Track = function()
 		}
 	};
 
+
+
+	this.bakePattern = function() {
+
+		var cy = _this.bakedPattern.length;
+		var cx = _this.bakedPattern[0].length;
+
+		for(var y = 0; y < cy; y++)
+		{
+			for(var x = 0; x < cx; x++)
+			{
+				var oldBeat = mod((x - 1), beatsPerMeasure); //used mod() because of possible negative values
+				var newState = _this.pattern[y][x];
+				var oldState = _this.pattern[y][oldBeat];
+
+				if(oldState != newState)
+				{
+					if(newState)
+					{
+						_this.bakedPattern[y][x] = 1;
+					}
+					else
+					{
+						_this.bakedPattern[y][x] = -1;
+					}
+				}
+				else
+				{
+					_this.bakedPattern[y][x] = 0;
+				}
+			}
+		}
+	};
 
 
 	/*
