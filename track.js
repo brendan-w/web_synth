@@ -53,16 +53,19 @@ var Track = function()
 	{
 		if(_this.running)
 		{
-			//turn the oscillators on/off
+
+			//TEMPORARY, runs a little slow, i'll speed it up later
 			for(var y = 0; y < notes; y++)
 			{
+				//turn the oscillators on/off
 				var noteGain = _this.gain_nodes[y];
+				var oldBeat = mod((currentBeat - 1), beatsPerMeasure); //used mod() because of possible negative values
 				var newState = _this.pattern[y][currentBeat];
-				var oldState = _this.pattern[y][mod((currentBeat - 1), beatsPerMeasure)]; //used mod() because of possible negative values
+				var oldState = _this.pattern[y][oldBeat];
 
 				if(newState !== oldState) //only switch nodes if their state changes
 				{
-					if(_this.pattern[y][currentBeat])
+					if(newState)
 					{
 						noteGain.gain.value = 1;
 					}
@@ -71,9 +74,27 @@ var Track = function()
 						noteGain.gain.value = 0;
 					}
 				}
-			}
 
-			//give UI feedback
+				//give UI feedback
+				//TEMPORARY, runs a little slow, i'll speed it up later
+				if(newState)
+				{
+					_this.patternButtons[y][currentBeat].className = "playOn";
+				}
+				else
+				{
+					_this.patternButtons[y][currentBeat].className = "playOff";
+				}
+
+				if(oldState)
+				{
+					_this.patternButtons[y][oldBeat].className = "on";
+				}
+				else
+				{
+					_this.patternButtons[y][oldBeat].className = "off";
+				}
+			}
 		}
 		else
 		{
@@ -153,12 +174,12 @@ var Track = function()
 				//create the table cell
 				var td = document.createElement("td");
 				tr.appendChild(td);
-				_this.patternButtons[y][x] = td;
-
+				
 				//create the button graphic
 				var button = document.createElement("div");
 				button.setAttribute("x", x);
 				button.setAttribute("y", y);
+				_this.patternButtons[y][x] = button;
 
 				//make the HTML match the data
 				if(_this.pattern[y][x])
