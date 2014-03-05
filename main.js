@@ -13,7 +13,6 @@ var audioCtx;
 var destination_node;
 
 //running vars
-var waitTime;
 var currentBeat = 0;
 
 //UI

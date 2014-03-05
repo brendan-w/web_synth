@@ -106,9 +106,11 @@ var Track = function()
 	this.update = function() {
 		var oldRunning = _this.running;
 		_this.running = false;
+		
 		_this.updatePattern();
 		_this.updateMatrix();
 		_this.updateFrequencies();
+
 		_this.running = oldRunning;
 	};
 
