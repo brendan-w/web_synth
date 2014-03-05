@@ -19,9 +19,12 @@ var Track = function()
 	this.compressor_node;
 
 	//running vars
+	//this.trackID = nextID();
 	this.running = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
 	this.bakedPattern //the points at which the notes turn on and off  -1 = off, 1 = on, 0 = no change
+
+	//console.log(this.trackID);
 
 	//display stuff
 	this.root;
@@ -44,6 +47,7 @@ var Track = function()
 	this.playOff;
 	*/
 
+	console.log("asdf");
 
 	/*
 	 * Public functions
@@ -61,14 +65,16 @@ var Track = function()
 				var oldState = _this.pattern[y][oldBeat];
 
 				//turn the oscillators on/off
-				if(_this.bakedPattern[y][currentBeat])
+				/*
+				if(_this.bakedPattern[y][currentBeat] === 1)
 				{
 					_this.gain_nodes[y].gain.value = 1;
 				}
-				else
+				else if(_this.bakedPattern[y][currentBeat] === -1)
 				{
 					_this.gain_nodes[y].gain.value = 0;
 				}
+				*/
 
 				//give UI feedback
 				//TEMPORARY, runs a little slow, I have some ideas to speed it up
@@ -104,14 +110,14 @@ var Track = function()
 
 	//general update function, called when an external setting was changed by the user
 	this.update = function() {
-		var oldRunning = _this.running;
-		_this.running = false;
+		//var oldEnable = _this.running;
+		//_this.setEnabled(false);
 		
 		_this.updatePattern();
 		_this.updateMatrix();
 		_this.updateFrequencies();
 
-		_this.running = oldRunning;
+		//_this.setEnabled(oldEnable);
 	};
 
 
@@ -209,6 +215,7 @@ var Track = function()
 
 	//bake the pattern into a change based array
 	this.bakePattern = function() {
+		//get the current dimensions
 		var cy = _this.bakedPattern.length;
 		var cx = _this.bakedPattern[0].length;
 
@@ -253,6 +260,14 @@ var Track = function()
 		else
 		{
 			_this.running = false;
+
+			/*
+			//turn off all the notes
+			for(var i = 0; i < _this.gain_nodes.length; i++)
+			{
+				_this.gain_nodes[i].gain.value = 0;	
+			}
+			*/
 		}
 	};
 
@@ -276,7 +291,7 @@ var Track = function()
 		_this.bakePattern(); //bake the changes
 	};
 
-	//
+	//get values from the key, octave and scale <select>, and update the oscillators
 	this.updateFrequencies = function(e) {
 		//get new information from the select dropdowns
 		var key = _this.keySelect.selectedIndex;
@@ -333,9 +348,9 @@ var Track = function()
 			this.oscillator_nodes[y].connect(this.gain_nodes[y]);
 			this.gain_nodes[y].connect(this.master_gain_node);
 
+			//turn things off BEFORE the oscillators are started
 			this.gain_nodes[y].gain.value = 0;
 			this.oscillator_nodes[y].start(0);
-
 		}
 
 		this.master_gain_node.connect(destination_node);
@@ -343,6 +358,7 @@ var Track = function()
 
 		//HTML--------------------------------------------
 		this.root = document.createElement("section");
+		//this.root.setAttribute("trackID", this.trackID);
 
 		//make lefthand option pane
 		var options = document.createElement("div");
@@ -371,13 +387,14 @@ var Track = function()
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);
-		this.running = true;
+		//this.setEnabled(true);
 
 	//end constructor----------------------------------------------------------
 
 	//return only public functions
 	return {
 		beat: this.beat,
-		update: this.update
+		update: this.update,
+		id, this.trackID
 	};
 };
