@@ -71,7 +71,7 @@ var Track = function()
 				}
 
 				//give UI feedback
-				//TEMPORARY, runs a little slow, i'll speed it up later
+				//TEMPORARY, runs a little slow, I have some ideas to speed it up
 				if(newState)
 				{
 					_this.patternButtons[y][currentBeat].className = "playOn";
@@ -104,8 +104,12 @@ var Track = function()
 
 	//general update function, called when an external setting was changed by the user
 	this.update = function() {
+		var oldRunning = _this.running;
+		_this.running = false;
+		_this.updatePattern();
 		_this.updateMatrix();
-		_this.bakePattern();
+		_this.updateFrequencies();
+		_this.running = oldRunning;
 	};
 
 
@@ -114,39 +118,9 @@ var Track = function()
 	 */
 
 
-	//creates and dimensions the pattern buffer according to notes and beatsPerMeasure
 	//builds the HTML for the button matrix (with values as given by pattern[y][x])
 	this.updateMatrix = function() {
 		
-		//DATA------------------------------------------
-
-		//check if there's already a pattern there
-		if(_this.pattern === undefined)
-		{
-			//create an empty pattern
-			_this.pattern = make2D(notes, beatsPerMeasure, false);
-			_this.bakedPattern = make2D(notes, beatsPerMeasure, 0);
-		}
-		else
-		{
-			//its MAAAGICAL!
-			_this.pattern = resize2D(_this.pattern,
-									notes,
-									beatsPerMeasure,
-									false,
-									true,
-									false);
-			_this.bakedPattern = resize2D(_this.bakedPattern,
-										  notes,
-										  beatsPerMeasure,
-										  false,
-										  true,
-										  0);
-		}
-
-
-		//HTML------------------------------------------
-
 		//ditch anything that was there before
 		if(_this.table === undefined)
 		{
@@ -201,9 +175,38 @@ var Track = function()
 	};
 
 
+	//creates and dimensions the pattern buffers according to notes and beatsPerMeasure
+	this.updatePattern = function() {
 
+		//check if there's already a pattern there
+		if(_this.pattern === undefined)
+		{
+			//create an empty pattern
+			_this.pattern = make2D(notes, beatsPerMeasure, false);
+			_this.bakedPattern = make2D(notes, beatsPerMeasure, 0);
+		}
+		else
+		{
+			//its MAAAGICAL!
+			_this.pattern = resize2D(_this.pattern,
+									notes,
+									beatsPerMeasure,
+									false,
+									true,
+									false);
+			_this.bakedPattern = resize2D(_this.bakedPattern,
+										  notes,
+										  beatsPerMeasure,
+										  false,
+										  true,
+										  0);
+		}
+
+		_this.bakePattern();
+	};
+
+	//bake the pattern into a change based array
 	this.bakePattern = function() {
-
 		var cy = _this.bakedPattern.length;
 		var cx = _this.bakedPattern[0].length;
 
@@ -251,6 +254,7 @@ var Track = function()
 		}
 	};
 
+	//click handler for matrix buttons
 	this.matrixButtonClicked = function(e) {
 		var element = e.target;
 		var x = element.getAttribute("x");
@@ -267,8 +271,10 @@ var Track = function()
 			element.className = "off";
 		}
 
+		_this.bakePattern(); //bake the changes
 	};
 
+	//
 	this.updateFrequencies = function(e) {
 		//get new information from the select dropdowns
 		var key = _this.keySelect.selectedIndex;
@@ -277,8 +283,7 @@ var Track = function()
 
 		//update the oscillators with their new frequencies
 		for(var y = 0; y < notes; y++)
-		{
-			                      //bottom = note 0
+		{							//bottom = note 0
 			_this.oscillator_nodes[invert(y, notes)].frequency.value = getFrequency(y, key, octave, scale);
 		}
 	};
@@ -359,11 +364,8 @@ var Track = function()
 		this.toneSelect.addEventListener("change", this.updateTone);
 		options.appendChild(this.toneSelect);
 
-		//make the sequencer matrix
-		this.updateMatrix();
-
-		//setup the oscillators with their frequencies
-		this.updateFrequencies();
+		//make the sequencer matrix & setup the oscillators with their frequencies
+		this.update();
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);
