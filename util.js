@@ -53,7 +53,6 @@ var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 120; //speed
 
-//var id = 0;
 
 
 
@@ -187,13 +186,6 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 	}
 }
 
-/*
-//get the next ID number
-function nextID()
-{
-	return id++;
-}
-*/
 
 //returns a new <select> element, with the supplied options
 //looks at the .name property of array elements

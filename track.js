@@ -19,12 +19,9 @@ var Track = function()
 	this.compressor_node;
 
 	//running vars
-	//this.trackID = nextID();
 	this.running = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
 	this.bakedPattern //the points at which the notes turn on and off  -1 = off, 1 = on, 0 = no change
-
-	//console.log(this.trackID);
 
 	//display stuff
 	this.root;
@@ -47,7 +44,6 @@ var Track = function()
 	this.playOff;
 	*/
 
-	console.log("asdf");
 
 	/*
 	 * Public functions
@@ -56,6 +52,7 @@ var Track = function()
 	//plays the specified beat in the measure
 	this.beat = function()
 	{
+
 		if(_this.running)
 		{
 			for(var y = 0; y < notes; y++)
@@ -65,7 +62,6 @@ var Track = function()
 				var oldState = _this.pattern[y][oldBeat];
 
 				//turn the oscillators on/off
-				/*
 				if(_this.bakedPattern[y][currentBeat] === 1)
 				{
 					_this.gain_nodes[y].gain.value = 1;
@@ -74,7 +70,7 @@ var Track = function()
 				{
 					_this.gain_nodes[y].gain.value = 0;
 				}
-				*/
+				
 
 				//give UI feedback
 				//TEMPORARY, runs a little slow, I have some ideas to speed it up
@@ -110,14 +106,14 @@ var Track = function()
 
 	//general update function, called when an external setting was changed by the user
 	this.update = function() {
-		//var oldEnable = _this.running;
-		//_this.setEnabled(false);
+		var oldEnable = _this.running;
+		_this.setEnabled(false);
 		
 		_this.updatePattern();
 		_this.updateMatrix();
 		_this.updateFrequencies();
 
-		//_this.setEnabled(oldEnable);
+		_this.setEnabled(oldEnable);
 	};
 
 
@@ -212,6 +208,7 @@ var Track = function()
 
 		_this.bakePattern();
 	};
+
 
 	//bake the pattern into a change based array
 	this.bakePattern = function() {
@@ -358,7 +355,6 @@ var Track = function()
 
 		//HTML--------------------------------------------
 		this.root = document.createElement("section");
-		//this.root.setAttribute("trackID", this.trackID);
 
 		//make lefthand option pane
 		var options = document.createElement("div");
@@ -387,14 +383,13 @@ var Track = function()
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);
-		//this.setEnabled(true);
+		this.setEnabled(true);
 
 	//end constructor----------------------------------------------------------
 
 	//return only public functions
 	return {
 		beat: this.beat,
-		update: this.update,
-		id, this.trackID
+		update: this.update
 	};
 };

@@ -46,7 +46,7 @@ function addTrack() {
 	tracks.push(new Track());
 }
 
-//called by tracks themselves   DO NOT CALL WITHOUT RUNNING track.destruct(), else things will pile up
+//called by tracks themselves
 function deleteTrack(num) {
 	tracks.splice(num, 1);
 }

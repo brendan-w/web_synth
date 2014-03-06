@@ -119,7 +119,7 @@ td > div
 {
 	height:9px;
 	width:30px;
-	border-radius: 3px;
+	border-radius: 2px;
 }
 
 td > div.off:hover { background-color: rgb(80,80,80) !important; }
