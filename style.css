@@ -45,16 +45,6 @@ footer
 	width:300px;
 	height:30px;
 	line-height: 30px;
-
-	background-color: rgb(60,60,60);
-	color:white;
-	border-radius: 3px;
-}
-
-#addTrack:hover
-{
-	background-color: rgb(50,110,50);
-	cursor:pointer;
 }
 
 
@@ -66,21 +56,26 @@ footer
 	width:300px;
 	height:30px;
 	line-height: 30px;
-
-	background-color: rgb(60,60,60);
-	color:white;
-	border-radius: 3px;
-}
-
-#test:hover
-{
-	background-color: rgb(50,110,50);
-	cursor:pointer;
 }
 
 #hidden
 {
 	display:none;
+}
+
+.button
+{
+	font-size: 10pt;
+	background-color: rgb(60,60,60);
+	color:white;
+	border-radius: 3px;
+	text-align: center;
+}
+
+.button:hover
+{
+	background-color: rgb(50,110,50);
+	cursor:pointer;
 }
 
 /*********************** Tracks ***********************/
@@ -89,7 +84,7 @@ section
 {
 	padding-top:8px;
 	padding-bottom:8px;
-	margin-bottom:10px;
+	margin-bottom:20px;
 	background-color: rgba(45,45,45,0.5);
 	border-top:1px solid rgb(50,50,50);
 	border-bottom:1px solid rgb(50,50,50);
@@ -108,22 +103,20 @@ div.options, table
 
 div.options
 {
-	padding-left:16px;
-	padding-right:16px;
+	padding-left:50px;
+	padding-right:50px;
 }
 
 
-
-div.options > div
-{
-	margin-bottom:8px;
-}
+div.options > div { margin-bottom:8px; }
+div.options > div:last-of-type { margin-bottom:0px; }
 
 div.options span
 {
 	width:4em;
 	display:inline-block;
 	font-size: 11pt;
+	opacity: 0.5;
 }
 
 div.options select
@@ -132,9 +125,19 @@ div.options select
 	color:white;
 	background-color: rgb(60,60,60);
 	border:none;
+	opacity: 0.5;
 }
 
+div.options select:hover
+{
+	opacity: 1;
+}
 
+div.options > div.button
+{
+	height:28px;
+	line-height: 28px;
+}
 
 
 td { padding:1px; }
