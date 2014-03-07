@@ -79,12 +79,6 @@ function beat()
 }
 
 
-function printout(e){
-	console.log("asdffff");
-	console.log(e);
-}
-
-
 function init() {
 	if(getAudioContext())
 	{
@@ -105,8 +99,6 @@ function init() {
 	{
 		console.log("couldn't get audio context");
 	}
-
-	load("track.html", printout);
 }
 
 window.onload = init;

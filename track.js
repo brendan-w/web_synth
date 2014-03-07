@@ -126,12 +126,7 @@ var Track = function()
 	this.updateMatrix = function() {
 		
 		//ditch anything that was there before
-		if(_this.table === undefined)
-		{
-			_this.table = document.createElement("table");
-			_this.root.appendChild(_this.table);
-		}
-		else
+		if(_this.table.firstChild !== null)
 		{
 			//empty its contents
 			while(_this.table.firstChild)
@@ -354,30 +349,26 @@ var Track = function()
 
 
 		//HTML--------------------------------------------
-		this.root = document.createElement("section");
 
-		//make lefthand option pane
-		var options = document.createElement("div");
-		this.root.appendChild(options);
-		options.className = "options";
-		options.innerHMTL = "Key - OCtave - Scale";
+		//grab the template HMTL for a track object
+		this.root = document.querySelector("#hidden .track").cloneNode(true);
 
-		this.keySelect = makeSelect(keys, 0);
+		this.table = this.root.querySelector("table");
+		this.keySelect = this.root.querySelector(".key");
+		this.octaveSelect = this.root.querySelector(".octave");
+		this.scaleSelect = this.root.querySelector(".scale");
+		this.toneSelect = this.root.querySelector(".tone");
+
+		fillSelect(this.keySelect, keys, 0);
+		fillSelect(this.octaveSelect ,octaves, 2);
+		fillSelect(this.scaleSelect ,scales, 1);
+		fillSelect(this.toneSelect ,tones, 0);
+
 		this.keySelect.addEventListener("change", this.updateFrequencies);
-		options.appendChild(this.keySelect);
-
-		this.octaveSelect = makeSelect(octaves, 2);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);
-		options.appendChild(this.octaveSelect);
-
-		this.scaleSelect = makeSelect(scales, 1);
 		this.scaleSelect.addEventListener("change", this.updateFrequencies);
-		options.appendChild(this.scaleSelect);
-
-		this.toneSelect = makeSelect(tones, 0);
 		this.toneSelect.addEventListener("change", this.updateTone);
-		options.appendChild(this.toneSelect);
-
+		
 		//make the sequencer matrix & setup the oscillators with their frequencies
 		this.update();
 

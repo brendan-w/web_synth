@@ -43,16 +43,15 @@ var octaves = [
 	{name: "7", octave:7}
 ];
 var tones = [
-	{name: "sine",     real:[], imag:[]},
-	{name: "square",   real:[], imag:[]},
-	{name: "saw",      real:[], imag:[]},
-	{name: "triangle", real:[], imag:[]}
+	{name: "Sine",     real:[], imag:[]},
+	{name: "Square",   real:[], imag:[]},
+	{name: "Saw",      real:[], imag:[]},
+	{name: "Triangle", real:[], imag:[]}
 ];
 
 var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 120; //speed
-
 
 
 
@@ -187,11 +186,10 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 }
 
 
-//returns a new <select> element, with the supplied options
+//fills a <select> element with the supplied options
 //looks at the .name property of array elements
-function makeSelect(array, defaultIndex)
+function fillSelect(select, array, defaultIndex)
 {
-	var select = document.createElement("select");
 	for(var i = 0; i < array.length; i++)
 	{
 		var option = document.createElement("option");
@@ -202,7 +200,6 @@ function makeSelect(array, defaultIndex)
 			option.setAttribute("selected", "selected");
 		}
 	}
-	return select;
 };
 
 //returns css for a different color (for as long as it can)
@@ -227,55 +224,3 @@ function mod(x,n) {return(((x%n)+n)%n);}
 
 //maps a value from one range to another (useful during animation)
 function map(x, in_min, in_max, out_min, out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
-
-
-//ajax loader from http://code.tutsplus.com/articles/how-to-make-ajax-requests-with-raw-javascript--net-4855
-function load(url, callback) {
-	var xhr;
-
-	if(typeof XMLHttpRequest !== 'undefined') xhr = new XMLHttpRequest();
-	else {
-	    var versions = ["MSXML2.XmlHttp.5.0",
-	                    "MSXML2.XmlHttp.4.0",
-	                    "MSXML2.XmlHttp.3.0",
-	                    "MSXML2.XmlHttp.2.0",
-	                    "Microsoft.XmlHttp"]
-	
-	     for(var i = 0, len = versions.length; i < len; i++) {
-	        try {
-	            xhr = new ActiveXObject(versions[i]);
-	            break;
-	        }
-	        catch(e){}
-	     } // end for
-	}
-	
-	xhr.onreadystatechange = ensureReadiness;
-	
-	function ensureReadiness() {
-
-
-
-	    if(xhr.readyState < 4) {
-	        return;
-	    }
-	    
-	    console.log(xhr.readyState);
-	    console.log(xhr.status);
-
-	    if(xhr.status !== 200) {
-	        return;
-	    }
-	
-
-
-	    // all is well 
-	    if(xhr.readyState == 4) {
-	    	console.log("Asdf");
-	        callback(xhr);
-	    }          
-	}
-	
-	xhr.open('GET', url, true);
-	xhr.send('');
-}

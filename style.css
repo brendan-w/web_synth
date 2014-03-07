@@ -78,6 +78,11 @@ footer
 	cursor:pointer;
 }
 
+#hidden
+{
+	display:none;
+}
+
 /*********************** Tracks ***********************/
 
 section
@@ -103,20 +108,34 @@ div.options, table
 
 div.options
 {
-	width:200px;
+	padding-left:16px;
+	padding-right:16px;
 }
 
-div.options *
+
+
+div.options > div
 {
-	display:block;
+	margin-bottom:8px;
 }
 
-div.options > select
+div.options span
 {
+	width:4em;
+	display:inline-block;
+	font-size: 11pt;
+}
+
+div.options select
+{
+	width:8em;
 	color:white;
 	background-color: rgb(60,60,60);
 	border:none;
 }
+
+
+
 
 td { padding:1px; }
 
