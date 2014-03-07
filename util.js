@@ -227,3 +227,55 @@ function mod(x,n) {return(((x%n)+n)%n);}
 
 //maps a value from one range to another (useful during animation)
 function map(x, in_min, in_max, out_min, out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
+
+
+//ajax loader from http://code.tutsplus.com/articles/how-to-make-ajax-requests-with-raw-javascript--net-4855
+function load(url, callback) {
+	var xhr;
+
+	if(typeof XMLHttpRequest !== 'undefined') xhr = new XMLHttpRequest();
+	else {
+	    var versions = ["MSXML2.XmlHttp.5.0",
+	                    "MSXML2.XmlHttp.4.0",
+	                    "MSXML2.XmlHttp.3.0",
+	                    "MSXML2.XmlHttp.2.0",
+	                    "Microsoft.XmlHttp"]
+	
+	     for(var i = 0, len = versions.length; i < len; i++) {
+	        try {
+	            xhr = new ActiveXObject(versions[i]);
+	            break;
+	        }
+	        catch(e){}
+	     } // end for
+	}
+	
+	xhr.onreadystatechange = ensureReadiness;
+	
+	function ensureReadiness() {
+
+
+
+	    if(xhr.readyState < 4) {
+	        return;
+	    }
+	    
+	    console.log(xhr.readyState);
+	    console.log(xhr.status);
+
+	    if(xhr.status !== 200) {
+	        return;
+	    }
+	
+
+
+	    // all is well 
+	    if(xhr.readyState == 4) {
+	    	console.log("Asdf");
+	        callback(xhr);
+	    }          
+	}
+	
+	xhr.open('GET', url, true);
+	xhr.send('');
+}
