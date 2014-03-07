@@ -88,9 +88,6 @@ function init() {
 		//make the button to add more tracks
 		addButton = document.querySelector("#addTrack");
 		addButton.addEventListener("click", addTrack);
-
-		//TEMPORARY testing purposes only
-		document.querySelector("#test").addEventListener("click", updateTracks);
 		
 		//start it running
 		beat();

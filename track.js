@@ -19,7 +19,7 @@ var Track = function()
 	this.compressor_node;
 
 	//running vars
-	this.running = false;
+	this.enabled = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
 	this.bakedPattern //the points at which the notes turn on and off  -1 = off, 1 = on, 0 = no change
 
@@ -53,7 +53,7 @@ var Track = function()
 	this.beat = function()
 	{
 
-		if(_this.running)
+		if(_this.enabled)
 		{
 			for(var y = 0; y < notes; y++)
 			{
@@ -70,10 +70,8 @@ var Track = function()
 				{
 					_this.gain_nodes[y].gain.value = 0;
 				}
-				
 
 				//give UI feedback
-				//TEMPORARY, runs a little slow, I have some ideas to speed it up
 				if(newState)
 				{
 					_this.patternButtons[y][currentBeat].className = "playOn";
@@ -106,7 +104,7 @@ var Track = function()
 
 	//general update function, called when an external setting was changed by the user
 	this.update = function() {
-		var oldEnable = _this.running;
+		var oldEnable = _this.enabled;
 		_this.setEnabled(false);
 		
 		_this.updatePattern();
@@ -126,13 +124,9 @@ var Track = function()
 	this.updateMatrix = function() {
 		
 		//ditch anything that was there before
-		if(_this.table.firstChild !== null)
+		while(_this.table.firstChild)
 		{
-			//empty its contents
-			while(_this.table.firstChild)
-			{
-				_this.table.removeChild(_this.table.firstChild);
-			}
+			_this.table.removeChild(_this.table.firstChild);
 		}
 
 		_this.patternButtons = new Array();
@@ -184,7 +178,8 @@ var Track = function()
 			_this.pattern = make2D(notes, beatsPerMeasure, false);
 			_this.bakedPattern = make2D(notes, beatsPerMeasure, 0);
 		}
-		else
+		else if((_this.pattern.length !== beatsPerMeasure) ||
+				(_this.pattern[0].length !== notes))
 		{
 			//its MAAAGICAL!
 			_this.pattern = resize2D(_this.pattern,
@@ -247,19 +242,17 @@ var Track = function()
 	this.setEnabled = function(value) {
 		if(value === true)
 		{
-			_this.running = true;
+			_this.enabled = true;
 		}
 		else
 		{
-			_this.running = false;
+			_this.enabled = false;
 
-			/*
 			//turn off all the notes
 			for(var i = 0; i < _this.gain_nodes.length; i++)
 			{
 				_this.gain_nodes[i].gain.value = 0;	
 			}
-			*/
 		}
 	};
 
@@ -297,8 +290,30 @@ var Track = function()
 		}
 	};
 
+	//reads the UI, and sets the oscillators with the correct periodicWave
 	this.updateTone = function(e) {
+		var tone = tones[_this.toneSelect.selectedIndex];
 
+		var type;
+		var periodicWave;
+
+		if(!tone.custom)
+		{
+			type = tone.name.toLowerCase();
+		}
+		else
+		{
+			type = "custom";
+		}
+
+		for(var y = 0; y < notes; y++)
+		{							//bottom = note 0
+			_this.oscillator_nodes[invert(y, notes)].type = type;
+			if(tone.custom)
+			{
+				
+			}
+		}
 	};
 
 	this.updateVolume = function(e) {
@@ -360,9 +375,9 @@ var Track = function()
 		this.toneSelect = this.root.querySelector(".tone");
 
 		fillSelect(this.keySelect, keys, 0);
-		fillSelect(this.octaveSelect ,octaves, 2);
-		fillSelect(this.scaleSelect ,scales, 1);
-		fillSelect(this.toneSelect ,tones, 0);
+		fillSelect(this.octaveSelect, octaves, 2);
+		fillSelect(this.scaleSelect, scales, 1);
+		fillSelect(this.toneSelect, tones, 0);
 
 		this.keySelect.addEventListener("change", this.updateFrequencies);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);

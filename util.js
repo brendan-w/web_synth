@@ -43,10 +43,12 @@ var octaves = [
 	{name: "7", octave:7}
 ];
 var tones = [
-	{name: "Sine",     real:[], imag:[]},
-	{name: "Square",   real:[], imag:[]},
-	{name: "Saw",      real:[], imag:[]},
-	{name: "Triangle", real:[], imag:[]}
+	//stores harmonic content for the various tones
+	{name: "Sine",     custom:false},
+	{name: "Triangle", custom:false},
+	{name: "Sawtooth", custom:false},
+	{name: "Square",   custom:false},
+	{name: "String",   custom:true,  real:[], imag:[]}
 ];
 
 var notes = 12; //matrix height
