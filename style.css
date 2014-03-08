@@ -74,7 +74,8 @@ footer
 
 .button:hover
 {
-	background-color: rgb(50,110,50);
+	background-color: rgb(80,80,80);
+	/*background-color: rgb(50,110,50);*/
 	cursor:pointer;
 }
 
@@ -149,9 +150,9 @@ td > div
 	border-radius: 2px;
 }
 
-td > div.off:hover { background-color: rgb(80,80,80) !important; }
-td > div.on:hover { background-color: rgb(90,170,90) !important; }
-td > div.on { background-color: rgb(50,120,50); }
-td > div.off { background-color: rgb(50,60,50); }
-td > div.playOff { background-color: rgb(60,80,60); }
-td > div.playOn { background-color: rgb(60,255,60); }
+.false:hover { background-color: rgb(80,80,80) !important; }
+.true:hover { background-color: rgb(90,170,90) !important; }
+.true { background-color: rgb(50,120,50); }
+.false { background-color: rgb(50,60,50); }
+.playFalse { background-color: rgb(60,80,60); }
+.playTrue { background-color: rgb(60,255,60); }

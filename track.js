@@ -14,35 +14,27 @@ var Track = function()
 
 	//sound stuff
 	this.oscillator_nodes = []; //one oscillator for each pitch
-	this.waveShaper_nodes = [];
-	this.gain_nodes = []; //unfortunately, you can only call .start(0) ONCE, so gains are used to turn notes on & off
-	this.master_gain_node;
+	this.waveShaper_nodes = []; //distortion and such
+	this.gain_nodes = []; //used to turn notes on & off
+	this.master_gain_node; //only update the note range that you have to
 	this.compressor_node;
 
 	//running vars
 	this.enabled = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
+	this.upperBound = notes;
+	this.lowerBound = 0; 
 
 	//display stuff
 	this.root;
 	this.table;
 	this.patternButtons; // = [][]  (table cells) needed for playback color changes
+	this.playButton;
 	this.keySelect;
 	this.octaveSelect;
 	this.scaleSelect;
 	this.toneSelect;
 
-	//colors
-	//TODO: use util -> colorForIndex() to give each track a unique color
-	//is there a way to do it without adding 3 eventlisteners to every freakin' button?
-	/*
-	this.on;
-	this.off;
-	this.hoverOn;
-	this.hoverOff;
-	this.playOn;
-	this.playOff;
-	*/
 
 
 	/*
@@ -52,21 +44,22 @@ var Track = function()
 	//plays the specified beat in the measure
 	this.beat = function()
 	{
-
 		if(_this.enabled)
 		{
-			for(var y = 0; y < notes; y++)
+			//only loop through the section of notes that turn on and off
+			for(var y = _this.lowerBound; y < _this.upperBound; y++)
 			{
 				var oldBeat = mod((currentBeat - 1), beatsPerMeasure); //used mod() because of possible negative values
 				var newState = _this.pattern[y][currentBeat];
 				var oldState = _this.pattern[y][oldBeat];
+				var currentState = floatToBool(_this.gain_nodes[y].gain.value);
 
 				//turn the oscillators on/off
-				if(newState)
+				if(newState && !currentState)
 				{
 					_this.gain_nodes[y].gain.value = 1;
 				}
-				else
+				else if(!newState && currentState)
 				{
 					_this.gain_nodes[y].gain.value = 0;
 				}
@@ -74,20 +67,20 @@ var Track = function()
 				//give UI feedback
 				if(newState)
 				{
-					_this.patternButtons[y][currentBeat].className = "playOn";
+					_this.patternButtons[y][currentBeat].className = "playTrue";
 				}
 				else
 				{
-					_this.patternButtons[y][currentBeat].className = "playOff";
+					//_this.patternButtons[y][currentBeat].className = "playFalse";
 				}
 
 				if(oldState)
 				{
-					_this.patternButtons[y][oldBeat].className = "on";
+					_this.patternButtons[y][oldBeat].className = "true";
 				}
 				else
 				{
-					_this.patternButtons[y][oldBeat].className = "off";
+					_this.patternButtons[y][oldBeat].className = "false";
 				}
 			}
 		}
@@ -108,6 +101,7 @@ var Track = function()
 		_this.setEnabled(false);
 		
 		_this.updatePattern();
+		_this.updateBounds();
 		_this.updateMatrix();
 		_this.updateFrequencies();
 
@@ -154,11 +148,11 @@ var Track = function()
 				//make the HTML match the data
 				if(_this.pattern[y][x])
 				{
-					button.className = "on";
+					button.className = "true";
 				}
 				else
 				{
-					button.className = "off";
+					button.className = "false";
 				}
 
 				button.addEventListener("click", _this.matrixButtonClicked);
@@ -176,25 +170,48 @@ var Track = function()
 		{
 			//create an empty pattern
 			_this.pattern = make2D(notes, beatsPerMeasure, false);
-			_this.bakedPattern = make2D(notes, beatsPerMeasure, 0);
 		}
 		else if((_this.pattern.length !== beatsPerMeasure) ||
 				(_this.pattern[0].length !== notes))
 		{
 			//its MAAAGICAL!
 			_this.pattern = resize2D(_this.pattern,
-									notes,
-									beatsPerMeasure,
-									false,
-									true,
-									false);
-			_this.bakedPattern = resize2D(_this.bakedPattern,
-										  notes,
-										  beatsPerMeasure,
-										  false,
-										  true,
-										  0);
+									 notes,
+									 beatsPerMeasure,
+									 false,
+									 true,
+									 false);
 		}
+	};
+
+	//scans the pattern array and updates the top and bottom bounds (makes the beat() function faster)
+	this.updateBounds = function()
+	{
+		//update the vertical bounds
+		var haveNotes = new Array();
+
+		for(var y = 0; y < _this.pattern.length; y++)
+		{
+			for(var x = 0; x < _this.pattern[y].length; x++)
+			{
+				if(_this.pattern[y][x])
+				{
+					haveNotes[y] = true;
+				}
+				else if(haveNotes[y] == undefined)
+				{
+					haveNotes[y] = false;
+				}
+			}
+		}
+
+		var i = 0;
+		while(!haveNotes[i] && (i < notes)) { i++; }
+		_this.lowerBound = i;
+
+		i = notes;
+		while(!haveNotes[i] && (i >= 0)) { i--; }
+		_this.upperBound = i + 1;
 	};
 
 
@@ -211,12 +228,29 @@ var Track = function()
 		else
 		{
 			_this.enabled = false;
-
-			//turn off all the notes
-			for(var i = 0; i < _this.gain_nodes.length; i++)
+			
+			//in case this is called before things are set up
+			if(_this.patternButtons && _this.gain_nodes)
 			{
-				_this.gain_nodes[i].gain.value = 0;	
+				//turn off all the notes, reset the css to look like pattern
+				for(var y = 0; y < _this.patternButtons.length; y++)
+				{
+					_this.gain_nodes[y].gain.value = 0;	
+
+					for(var x = 0; x < _this.patternButtons[y].length; x++)
+					{
+						if(_this.pattern[y][x])
+						{
+							_this.patternButtons[y][x].className = "true";
+						}
+						else
+						{
+							_this.patternButtons[y][x].className = "false";						
+						}
+					}
+				}
 			}
+			
 		}
 	};
 
@@ -230,14 +264,14 @@ var Track = function()
 
 		if(_this.pattern[y][x])
 		{
-			element.className = "on";
+			element.className = "true";
 		}
 		else
 		{
-			element.className = "off";
+			element.className = "false";
 		}
 
-		_this.bakePattern(); //bake the changes
+		_this.updateBounds();
 	};
 
 	//get values from the key, octave and scale <select>, and update the oscillators
@@ -265,6 +299,11 @@ var Track = function()
 
 	this.updateVolume = function(e) {
 
+	};
+
+	this.toggleEnabled = function(e) {
+		_this.setEnabled(!_this.enabled);
+		e.target.classList.toggle("true");
 	};
 
 	//self destruct in five, four, three, tw**BOOM**
@@ -310,14 +349,6 @@ var Track = function()
 			
 			//setDistortion(1.5);
 			setDistortion(0);
-			/*
-			wsCurve[0] = -0.99;
-			wsCurve[1] = -0.99;
-			wsCurve[2] = 0;
-			wsCurve[3] = 0.99;
-			wsCurve[4] = 0.99;
-			*/
-
 
 			this.waveShaper_nodes[y].curve = wsCurve;
 			this.oscillator_nodes[y].start(0);
@@ -332,16 +363,18 @@ var Track = function()
 		this.root = document.querySelector("#hidden .track").cloneNode(true);
 
 		this.table = this.root.querySelector("table");
-		this.keySelect = this.root.querySelector(".key");
-		this.octaveSelect = this.root.querySelector(".octave");
-		this.scaleSelect = this.root.querySelector(".scale");
-		this.toneSelect = this.root.querySelector(".tone");
+		this.playButton = this.root.querySelector(".options .button");
+		this.keySelect = this.root.querySelector(".options .key");
+		this.octaveSelect = this.root.querySelector(".options .octave");
+		this.scaleSelect = this.root.querySelector(".options .scale");
+		this.toneSelect = this.root.querySelector(".options .tone");
 
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 2);
 		fillSelect(this.scaleSelect, scales, 1);
 		fillSelect(this.toneSelect, tones, 0);
 
+		this.playButton.addEventListener("click", this.toggleEnabled);
 		this.keySelect.addEventListener("change", this.updateFrequencies);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);
 		this.scaleSelect.addEventListener("change", this.updateFrequencies);

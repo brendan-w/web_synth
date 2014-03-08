@@ -35,6 +35,7 @@ var keys = [
 	{name: "B",  frequency: 493.88}
 ];
 var octaves = [
+	{name: "1", octave:1},
 	{name: "2", octave:2},
 	{name: "3", octave:3},
 	{name: "4", octave:4},
@@ -226,9 +227,20 @@ function mod(x,n) {return(((x%n)+n)%n);}
 //maps a value from one range to another (useful during animation)
 function map(x, in_min, in_max, out_min, out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
 
+function floatToBool(float)
+{
+	if (float >= 0.5) { return true; }
+	return false;
+}
+
 
 
 //EXPERIMENTAL BEYOND THIS POINT
+
+
+//https://github.com/janesconference/MorningStar/blob/master/audio/ADNonDescript.js
+//http://blog.chrislowis.co.uk/2013/06/17/synthesis-web-audio-api-envelopes.html
+
 var nSamples = 2048;
 var dist = 0;
 var wsCurve = new Float32Array(nSamples);

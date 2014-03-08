@@ -25,7 +25,7 @@ var HighResolutionTimer = window.HighResolutionTimer = window.HighResolutionTime
 				i.timer = setTimeout(function() {
 				i.run();
 				}, nextTick);
-			}(this));
+			})(this);
 			 
 			return this;
 		};
