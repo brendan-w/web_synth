@@ -22,7 +22,6 @@ var Track = function()
 	//running vars
 	this.enabled = false;
 	this.pattern; // = [][]  (booleans) the actual melody matrix
-	this.bakedPattern //the points at which the notes turn on and off  -1 = off, 1 = on, 0 = no change
 
 	//display stuff
 	this.root;
@@ -63,11 +62,11 @@ var Track = function()
 				var oldState = _this.pattern[y][oldBeat];
 
 				//turn the oscillators on/off
-				if(_this.bakedPattern[y][currentBeat] === 1)
+				if(newState)
 				{
 					_this.gain_nodes[y].gain.value = 1;
 				}
-				else if(_this.bakedPattern[y][currentBeat] === -1)
+				else
 				{
 					_this.gain_nodes[y].gain.value = 0;
 				}
@@ -196,42 +195,6 @@ var Track = function()
 										  true,
 										  0);
 		}
-
-		_this.bakePattern();
-	};
-
-
-	//bake the pattern into a change based array
-	this.bakePattern = function() {
-		//get the current dimensions
-		var cy = _this.bakedPattern.length;
-		var cx = _this.bakedPattern[0].length;
-
-		for(var y = 0; y < cy; y++)
-		{
-			for(var x = 0; x < cx; x++)
-			{
-				var oldBeat = mod((x - 1), beatsPerMeasure); //used mod() because of possible negative values
-				var newState = _this.pattern[y][x];
-				var oldState = _this.pattern[y][oldBeat];
-
-				if(oldState != newState)
-				{
-					if(newState)
-					{
-						_this.bakedPattern[y][x] = 1;
-					}
-					else
-					{
-						_this.bakedPattern[y][x] = -1;
-					}
-				}
-				else
-				{
-					_this.bakedPattern[y][x] = 0;
-				}
-			}
-		}
 	};
 
 
@@ -345,7 +308,15 @@ var Track = function()
 			//turn things off BEFORE the oscillators are started
 			this.gain_nodes[y].gain.value = 0;
 			
-			setDistortion(1.5);
+			//setDistortion(1.5);
+			setDistortion(0);
+			/*
+			wsCurve[0] = -0.99;
+			wsCurve[1] = -0.99;
+			wsCurve[2] = 0;
+			wsCurve[3] = 0.99;
+			wsCurve[4] = 0.99;
+			*/
 
 
 			this.waveShaper_nodes[y].curve = wsCurve;

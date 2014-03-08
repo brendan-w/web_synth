@@ -52,7 +52,7 @@ var tones = [
 
 var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
-var beatsPerMinute = 120; //speed
+var beatsPerMinute = 480; //120; //speed
 
 
 

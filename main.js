@@ -66,7 +66,7 @@ function updateTracks(e) {
 //main loop for the site, fires on every beat (rate is set by BPM)
 function beat()
 {
-	setTimeout(beat, getWaitTime()); //do this first because the code below takes time to run
+	//setTimeout(beat, getWaitTime()); //do this first because the code below takes time to run
 
 	for(var i = 0; i < tracks.length; i++)
 	{
@@ -90,7 +90,8 @@ function init() {
 		addButton.addEventListener("click", addTrack);
 		
 		//start it running
-		beat();
+		//beat();
+		setInterval(beat, getWaitTime());
 	}
 	else
 	{
