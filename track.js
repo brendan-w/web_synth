@@ -14,6 +14,7 @@ var Track = function()
 
 	//sound stuff
 	this.oscillator_nodes = []; //one oscillator for each pitch
+	this.waveShaper_nodes = [];
 	this.gain_nodes = []; //unfortunately, you can only call .start(0) ONCE, so gains are used to turn notes on & off
 	this.master_gain_node;
 	this.compressor_node;
@@ -292,27 +293,10 @@ var Track = function()
 
 	//reads the UI, and sets the oscillators with the correct periodicWave
 	this.updateTone = function(e) {
-		var tone = tones[_this.toneSelect.selectedIndex];
-
-		var type;
-		var periodicWave;
-
-		if(!tone.custom)
-		{
-			type = tone.name.toLowerCase();
-		}
-		else
-		{
-			type = "custom";
-		}
-
+		var type = tones[_this.toneSelect.selectedIndex].name.toLowerCase();
 		for(var y = 0; y < notes; y++)
-		{							//bottom = note 0
+		{						   //bottom = note 0
 			_this.oscillator_nodes[invert(y, notes)].type = type;
-			if(tone.custom)
-			{
-				
-			}
 		}
 	};
 
@@ -351,12 +335,20 @@ var Track = function()
 		for(var y = 0; y < notes; y++)
 		{
 			this.oscillator_nodes[y] = audioCtx.createOscillator();
+			this.waveShaper_nodes[y] = audioCtx.createWaveShaper();
 			this.gain_nodes[y] = audioCtx.createGain();
-			this.oscillator_nodes[y].connect(this.gain_nodes[y]);
+
+			this.oscillator_nodes[y].connect(this.waveShaper_nodes[y]);
+			this.waveShaper_nodes[y].connect(this.gain_nodes[y]);
 			this.gain_nodes[y].connect(this.master_gain_node);
 
 			//turn things off BEFORE the oscillators are started
 			this.gain_nodes[y].gain.value = 0;
+			
+			setDistortion(1.5);
+
+
+			this.waveShaper_nodes[y].curve = wsCurve;
 			this.oscillator_nodes[y].start(0);
 		}
 

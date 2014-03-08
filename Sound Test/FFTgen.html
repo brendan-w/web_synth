@@ -64,7 +64,7 @@
 	function init(){
      	container = document.querySelector("#container");
      	barsList = makeSimpleGraph(container, NUM_BARS);
-     	audioCtx = new AudioContext();
+     	audioCtx = new webkitAudioContext();
      	setUpDragDropAndLoad(container);
 
      	var controls = document.createElement("div");
@@ -177,24 +177,33 @@
 				sourceNode.connect(analyzerNode);
 				analyzerNode.connect(audioCtx.destination);
 				sourceNode.start(0);
-				status.innerHTML = "Playing...";
+				//status.innerHTML = "Playing...";
 				loop();
 			});
 		} 
 		catch(e) {
-			status.innerHTML = "Error, see console...";
+			//status.innerHTML = "Error, see console...";
 			console.log(e);
 		}
 	}// end playAndAnalyzeSound()
 	
-	
-	function loop() {
-		var byteArray = new Uint8Array(analyzerNode.frequencyBinCount);
-		analyzerNode.getByteFrequencyData(byteArray);
-		console.log(byteArray);
-		update(container, barsList, byteArray);
+	var count = 0;
 
-		requestAnimationFrame(loop);
+	function loop() {
+		var byteArray = new Float32Array(analyzerNode.frequencyBinCount);
+		analyzerNode.getFloatFrequencyData(byteArray);
+
+		if(count == 20)
+		{
+			console.log(byteArray);
+		}
+		else
+		{
+			console.log(count);
+			count++;
+			update(container, barsList, byteArray);
+			requestAnimationFrame(loop);
+		}
 
 	}
 

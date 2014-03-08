@@ -44,11 +44,10 @@ var octaves = [
 ];
 var tones = [
 	//stores harmonic content for the various tones
-	{name: "Sine",     custom:false},
-	{name: "Triangle", custom:false},
-	{name: "Sawtooth", custom:false},
-	{name: "Square",   custom:false},
-	{name: "String",   custom:true,  real:[], imag:[]}
+	{name: "Sine"},
+	{name: "Triangle"},
+	{name: "Sawtooth"},
+	{name: "Square"}
 ];
 
 var notes = 12; //matrix height
@@ -226,3 +225,42 @@ function mod(x,n) {return(((x%n)+n)%n);}
 
 //maps a value from one range to another (useful during animation)
 function map(x, in_min, in_max, out_min, out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
+
+
+
+//EXPERIMENTAL BEYOND THIS POINT
+var nSamples = 2048;
+var dist = 0;
+var wsCurve = new Float32Array(nSamples);
+
+function createWSCurve(amount, n_samples) {
+    
+    if ((amount >= 0) && (amount < 1)) {
+        
+        dist = amount;
+
+        var k = 2 * dist / (1 - dist);
+
+        for (var i = 0; i < n_samples; i+=1) {
+            // LINEAR INTERPOLATION: x := (c - a) * (z - y) / (b - a) + y
+            // a = 0, b = 2048, z = 1, y = -1, c = i
+            var x = (i - 0) * (1 - (-1)) / (n_samples - 0) + (-1);
+            wsCurve[i] = (1 + k) * x / (1+ k * Math.abs(x));
+        }
+   
+    }
+}
+
+function setDistortion(distValue) {
+    var distCorrect = distValue;
+    if (distValue < -1) {
+        distCorrect = -1;
+    }
+    if (distValue >= 1) {
+        distCorrect = 0.985;
+    }
+    //dist = distCorrect;
+    createWSCurve (distCorrect, nSamples);
+    console.log ("dist is ", dist);
+}
+
