@@ -79,7 +79,11 @@ footer
 	cursor:pointer;
 }
 
-/*********************** Tracks ***********************/
+.true { background-color: rgb(50,120,50); }
+.true:hover { background-color: rgb(90,170,90) !important; }
+
+
+/*********************** Sections ***********************/
 
 section
 {
@@ -96,32 +100,72 @@ section:last-of-type
 	margin-bottom:0px;
 }
 
-div.options, table
+section > *
 {
+	padding-left:50px;
 	display:inline-block;
 	vertical-align: top;
 }
 
-div.options
+.options
 {
-	padding-left:50px;
-	padding-right:50px;
+	width:11em;
 }
 
-
-div.options > div { margin-bottom:8px; }
-div.options > div:last-of-type { margin-bottom:0px; }
-
-div.options span
+.options > div
 {
-	width:4em;
+	margin-bottom:8px;
+	overflow:hidden;
+}
+
+.options > div:last-of-type { margin-bottom:0px; }
+
+.options span
+{
+	float:left;
 	display:inline-block;
 	font-size: 11pt;
 	opacity: 0.5;
 }
 
-div.options select
+table td { padding:1px; }
+
+table td > div
 {
+	height:9px;
+	width:30px;
+	border-radius: 2px;
+}
+
+/*********************** Main ***********************/
+
+#main input
+{
+	float:right;
+	width:10em;
+	display:inline-block;
+	margin:0px;
+	padding:0px;
+}
+
+#main td > div { background-color: rgb(70,30,30); height:18px;}
+#main td > div.true { background-color: rgb(200,30,30); }
+
+
+/*********************** Tracks ***********************/
+
+.track .options span
+{
+	width:4em;
+	float:left;
+	display:inline-block;
+	font-size: 11pt;
+	opacity: 0.5;
+}
+
+.track .options select
+{
+	float:right;
 	width:8em;
 	color:white;
 	background-color: rgb(60,60,60);
@@ -129,30 +173,20 @@ div.options select
 	opacity: 0.5;
 }
 
-div.options select:hover
+.track .options select:hover
 {
 	opacity: 1;
 }
 
-div.options > div.button
+.track .options > div.button
 {
 	height:28px;
 	line-height: 28px;
 }
 
-
-td { padding:1px; }
-
-td > div
-{
-	height:9px;
-	width:30px;
-	border-radius: 2px;
-}
-
-.false:hover { background-color: rgb(80,80,80) !important; }
-.true:hover { background-color: rgb(90,170,90) !important; }
-.true { background-color: rgb(50,120,50); }
-.false { background-color: rgb(50,60,50); }
-.playFalse { background-color: rgb(60,80,60); }
-.playTrue { background-color: rgb(60,255,60); }
+.track td > div.false:hover { background-color: rgb(80,80,80) !important; }
+.track td > div.true:hover { background-color: rgb(90,170,90) !important; }
+.track td > div.true { background-color: rgb(50,140,50); }
+.track td > div.false { background-color: rgb(40,60,40); }
+.track td > div.playFalse { background-color: rgb(60,80,60); }
+.track td > div.playTrue { background-color: rgb(60,255,60); }

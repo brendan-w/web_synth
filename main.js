@@ -14,8 +14,11 @@ var destination_node;
 
 //running vars
 var currentBeat = 0;
+var currentTimer;
 
 //UI
+var tempoSlider;
+var tempoLights = [];
 var addButton;
 
 
@@ -34,11 +37,13 @@ function getAudioContext() {
 	}
 	else
 	{
-   		return false;
+   		console.log("couldn't get audio context");
+   		//print html error message
 	}
 
 	destination_node = audioCtx.destination;
-	return true;
+
+	init();
 }
 
 //called by addButton clicks
@@ -62,11 +67,25 @@ function updateTracks(e) {
 	}
 }
 
+function tempoChanged() {
+	beatsPerMinute = tempoSlider.value;
+	console.log(beatsPerMinute);
+	start(); //restart, with the new tempo
+}
+
+
+function start() {
+	if(currentTimer !== undefined)
+	{
+		clearInterval(currentTimer);
+	}
+	currentTimer = setInterval(beat, getWaitTime());
+}
 
 //main loop for the site, fires on every beat (rate is set by BPM)
-function beat()
-{
-	//setTimeout(beat, getWaitTime()); //do this first because the code below takes time to run
+function beat() {
+	tempoLights[currentBeat].className = "true";
+	tempoLights[mod((currentBeat - 1), beatsPerMeasure)].className = "";
 
 	for(var i = 0; i < tracks.length; i++)
 	{
@@ -80,23 +99,34 @@ function beat()
 
 
 function init() {
-	if(getAudioContext())
-	{
-		//make the first track
-		addTrack();
+	//initialize the #main setcion
+	var tr = document.querySelector("#main table tr");
 
-		//make the button to add more tracks
-		addButton = document.querySelector("#addTrack");
-		addButton.addEventListener("click", addTrack);
-		
-		//start it running
-		//beat();
-		setInterval(beat, getWaitTime());
-	}
-	else
+	for(var x = 0; x < beatsPerMeasure; x++)
 	{
-		console.log("couldn't get audio context");
+		//create the table cell
+		var td = document.createElement("td");
+		tr.appendChild(td);
+		
+		//create the light graphic
+		var light = document.createElement("div");
+		light.setAttribute("x", x);
+		td.appendChild(light);
+		tempoLights[x] = light;
 	}
+
+	//make the button to add more tracks
+	addButton = document.querySelector("#addTrack");
+	addButton.addEventListener("click", addTrack);
+	
+	tempoSlider = document.querySelector("#tempo");
+	tempoSlider.addEventListener("change", tempoChanged);
+
+	//make the first track
+	addTrack();
+
+	//start it running
+	start();
 }
 
-window.onload = init;
+window.onload = getAudioContext;

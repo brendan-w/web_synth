@@ -69,19 +69,8 @@ var Track = function()
 				{
 					_this.patternButtons[y][currentBeat].className = "playTrue";
 				}
-				else
-				{
-					//_this.patternButtons[y][currentBeat].className = "playFalse";
-				}
 
-				if(oldState)
-				{
-					_this.patternButtons[y][oldBeat].className = "true";
-				}
-				else
-				{
-					_this.patternButtons[y][oldBeat].className = "false";
-				}
+				_this.patternButtons[y][oldBeat].className = oldState.toString();
 			}
 		}
 		else
@@ -370,7 +359,7 @@ var Track = function()
 		this.toneSelect = this.root.querySelector(".options .tone");
 
 		fillSelect(this.keySelect, keys, 0);
-		fillSelect(this.octaveSelect, octaves, 2);
+		fillSelect(this.octaveSelect, octaves, 3);
 		fillSelect(this.scaleSelect, scales, 1);
 		fillSelect(this.toneSelect, tones, 0);
 
