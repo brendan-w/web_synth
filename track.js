@@ -67,20 +67,11 @@ var Track = function()
 				//give UI feedback
 				if(newState)
 				{
-					_this.patternButtons[y][currentBeat].className = "playTrue";
+					_this.patternButtons[y][currentBeat].className = "play";
 				}
 
 				_this.patternButtons[y][oldBeat].className = oldState.toString();
 			}
-		}
-		else
-		{
-			//turn off sound
-			for(var y = 0; y < notes; y++)
-			{
-				_this.gain_nodes[y].gain.value = 0;
-			}
-			//turn off UI feedback
 		}
 	};
 
@@ -101,54 +92,6 @@ var Track = function()
 	/*
 	 * Private functions
 	 */
-
-
-	//builds the HTML for the button matrix (with values as given by pattern[y][x])
-	this.updateMatrix = function() {
-		
-		//ditch anything that was there before
-		while(_this.table.firstChild)
-		{
-			_this.table.removeChild(_this.table.firstChild);
-		}
-
-		_this.patternButtons = new Array();
-
-		//build the new table
-		for(var y = 0; y < _this.pattern.length; y++)
-		{
-			//create the table row
-			var tr = document.createElement("tr");
-			_this.table.appendChild(tr);
-			_this.patternButtons[y] = new Array();
-
-			for(var x = 0; x < _this.pattern[y].length; x++)
-			{
-				//create the table cell
-				var td = document.createElement("td");
-				tr.appendChild(td);
-				
-				//create the button graphic
-				var button = document.createElement("div");
-				button.setAttribute("x", x);
-				button.setAttribute("y", y);
-				_this.patternButtons[y][x] = button;
-
-				//make the HTML match the data
-				if(_this.pattern[y][x])
-				{
-					button.className = "true";
-				}
-				else
-				{
-					button.className = "false";
-				}
-
-				button.addEventListener("click", _this.matrixButtonClicked);
-				td.appendChild(button);
-			}
-		}
-	};
 
 
 	//creates and dimensions the pattern buffers according to notes and beatsPerMeasure
@@ -201,6 +144,75 @@ var Track = function()
 		i = notes;
 		while(!haveNotes[i] && (i >= 0)) { i--; }
 		_this.upperBound = i + 1;
+
+		//turn off the oscillators that are out of bounds
+		for(var y = 0; y < _this.lowerBound; y++)
+		{
+			_this.gain_nodes[y].gain.value = 0;
+		}
+		for(var y = _this.upperBound; y < notes; y++)
+		{
+			_this.gain_nodes[y].gain.value = 0;
+		}
+	};
+
+
+	//builds the HTML for the button matrix (with values as given by pattern[y][x])
+	this.updateMatrix = function() {
+		//recreate the table if the size changes
+		if((_this.patternButtons === undefined) ||
+		   (_this.patternButtons.length !== beatsPerMeasure) ||
+		   (_this.patternButtons[0].length !== notes))
+		{
+			//ditch anything that was there before
+			while(_this.table.firstChild)
+			{
+				_this.table.removeChild(_this.table.firstChild);
+			}
+
+			_this.patternButtons = new Array();
+
+			//build the new table
+			for(var y = 0; y < _this.pattern.length; y++)
+			{
+				//create the table row
+				var tr = document.createElement("tr");
+				_this.table.appendChild(tr);
+				_this.patternButtons[y] = new Array();
+
+				for(var x = 0; x < _this.pattern[y].length; x++)
+				{
+					//create the table cell
+					var td = document.createElement("td");
+					tr.appendChild(td);
+
+					//create the button graphic
+					var button = document.createElement("div");
+					_this.patternButtons[y][x] = button;
+					button.setAttribute("x", x);
+					button.setAttribute("y", y);
+					button.addEventListener("mousedown", _this.matrixClicked);
+					button.addEventListener("mouseenter", _this.matrixRollOver);
+					td.appendChild(button);
+				}
+			}
+		}
+
+		//make the table match the pattern
+		for(var y = 0; y < _this.patternButtons.length; y++)
+		{
+			for(var x = 0; x < _this.pattern[y].length; x++)
+			{
+				if(_this.pattern[y][x])
+				{
+					_this.patternButtons[y][x].className = "true";
+				}
+				else
+				{
+					_this.patternButtons[y][x].className = "false";
+				}
+			}
+		}
 	};
 
 
@@ -219,32 +231,23 @@ var Track = function()
 			_this.enabled = false;
 			
 			//in case this is called before things are set up
-			if(_this.patternButtons && _this.gain_nodes)
+			if(_this.patternButtons)
 			{
 				//turn off all the notes, reset the css to look like pattern
 				for(var y = 0; y < _this.patternButtons.length; y++)
 				{
 					_this.gain_nodes[y].gain.value = 0;	
-
-					for(var x = 0; x < _this.patternButtons[y].length; x++)
-					{
-						if(_this.pattern[y][x])
-						{
-							_this.patternButtons[y][x].className = "true";
-						}
-						else
-						{
-							_this.patternButtons[y][x].className = "false";						
-						}
-					}
 				}
+
+				//update the HMTL to get rid of any playing note lights
+				_this.updateMatrix();
 			}
 			
 		}
 	};
 
 	//click handler for matrix buttons
-	this.matrixButtonClicked = function(e) {
+	this.matrixClicked = function(e) {
 		var element = e.target;
 		var x = element.getAttribute("x");
 		var y = element.getAttribute("y");
@@ -262,6 +265,14 @@ var Track = function()
 
 		_this.updateBounds();
 	};
+
+	this.matrixRollOver = function(e) {
+		//if the mouse is held
+		if((e.button === 0) &&(e.buttons >= 1))
+		{
+			_this.matrixClicked(e);
+		}
+	}
 
 	//get values from the key, octave and scale <select>, and update the oscillators
 	this.updateFrequencies = function(e) {

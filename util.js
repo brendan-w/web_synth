@@ -44,7 +44,7 @@ var octaves = [
 	{name: "7", octave:7}
 ];
 var tones = [
-	//stores harmonic content for the various tones
+	//stores harmonic content for the various tones     <-- lies, but later it might
 	{name: "Sine"},
 	{name: "Triangle"},
 	{name: "Sawtooth"},
@@ -184,6 +184,22 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 		}
 
 		return newArray;
+	}
+}
+
+
+function shift2D(array, yShift, xShift) {
+	if(array)
+	{
+		//get the current dimensions of the array
+		var cy = array.length;
+		var cx = array[0].length;
+
+		var temp = new Array();
+		for(var y = 0; y < cy; y++)
+		{
+			
+		}
 	}
 }
 

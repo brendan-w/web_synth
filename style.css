@@ -80,7 +80,7 @@ footer
 }
 
 .true { background-color: rgb(50,120,50); }
-.true:hover { background-color: rgb(90,170,90) !important; }
+.true:hover { background-color: rgb(80,160,80) !important; }
 
 
 /*********************** Sections ***********************/
@@ -128,7 +128,20 @@ section > *
 	opacity: 0.5;
 }
 
-table td { padding:1px; }
+/* Had problems with clicking and dragging */
+table *
+{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+table td
+{
+	padding:1px;
+}
 
 table td > div
 {
@@ -184,9 +197,8 @@ table td > div
 	line-height: 28px;
 }
 
-.track td > div.false:hover { background-color: rgb(80,80,80) !important; }
+.track td > div.false:hover { background-color: rgb(60,80,60) !important; }
 .track td > div.true:hover { background-color: rgb(90,170,90) !important; }
 .track td > div.true { background-color: rgb(50,140,50); }
 .track td > div.false { background-color: rgb(40,60,40); }
-.track td > div.playFalse { background-color: rgb(60,80,60); }
-.track td > div.playTrue { background-color: rgb(60,255,60); }
+.track td > div.play { background-color: rgb(60,255,60); }
