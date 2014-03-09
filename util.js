@@ -55,6 +55,9 @@ var notes = 12; //matrix height
 var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 480; //120; //speed
 
+var minBeats = 2;
+var maxBeats = 14;
+
 
 
 /*
@@ -98,6 +101,13 @@ function getFrequency(note, key, octave, scale)
 	return freq;
 }
 
+
+function removeChildren(element) {
+	while(element.firstChild)
+	{
+		element.removeChild(element.firstChild);
+	}
+}
 
 //function that makes a 2D array, and fills it with default values
 function make2D(ny, nx, defaultValue)
@@ -188,6 +198,7 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 }
 
 
+//function for shifting an array up/down/left/right. Values loop
 function shift2D(array, yShift, xShift) {
 	if(array)
 	{
@@ -195,10 +206,14 @@ function shift2D(array, yShift, xShift) {
 		var cy = array.length;
 		var cx = array[0].length;
 
-		var temp = new Array();
+		//var temp = make2D(Math.abs(yShift), Math.abs(xShift), false);
+
 		for(var y = 0; y < cy; y++)
 		{
-			
+			for(var x = 0; x < cx; x++)
+			{
+				
+			}
 		}
 	}
 }
@@ -238,17 +253,18 @@ function referredFrom(page)
 }
 
 //fix Javascript modulo bug for negative numbers... jeese...
-function mod(x,n) {return(((x%n)+n)%n);}
+Math.mod = function(x,n) { return(((x%n)+n)%n); };
 
 //maps a value from one range to another (useful during animation)
-function map(x, in_min, in_max, out_min, out_max) {return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;}
+Math.map = function(x, in_min, in_max, out_min, out_max) { return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min; };
+
+Math.clamp = function(number, min, max) { return Math.min(Math.max(number, min), max); };
 
 function floatToBool(float)
 {
 	if (float >= 0.5) { return true; }
 	return false;
 }
-
 
 
 //EXPERIMENTAL BEYOND THIS POINT
@@ -291,4 +307,3 @@ function setDistortion(distValue) {
     createWSCurve (distCorrect, nSamples);
     console.log ("dist is ", dist);
 }
-

@@ -49,7 +49,7 @@ var Track = function()
 			//only loop through the section of notes that turn on and off
 			for(var y = _this.lowerBound; y < _this.upperBound; y++)
 			{
-				var oldBeat = mod((currentBeat - 1), beatsPerMeasure); //used mod() because of possible negative values
+				var oldBeat = Math.mod((currentBeat - 1), beatsPerMeasure); //used Math.mod() because of possible negative values
 				var newState = _this.pattern[y][currentBeat];
 				var oldState = _this.pattern[y][oldBeat];
 				var currentState = floatToBool(_this.gain_nodes[y].gain.value);
@@ -165,10 +165,7 @@ var Track = function()
 		   (_this.patternButtons[0].length !== notes))
 		{
 			//ditch anything that was there before
-			while(_this.table.firstChild)
-			{
-				_this.table.removeChild(_this.table.firstChild);
-			}
+			removeChildren(_this.table);
 
 			_this.patternButtons = new Array();
 
@@ -347,7 +344,7 @@ var Track = function()
 			//turn things off BEFORE the oscillators are started
 			this.gain_nodes[y].gain.value = 0;
 			
-			//setDistortion(1.5);
+			//setDistortion(1);
 			setDistortion(0);
 
 			this.waveShaper_nodes[y].curve = wsCurve;
@@ -360,7 +357,7 @@ var Track = function()
 		//HTML--------------------------------------------
 
 		//grab the template HMTL for a track object
-		this.root = document.querySelector("#hidden .track").cloneNode(true);
+		this.root = document.querySelector("#templates .track").cloneNode(true);
 
 		this.table = this.root.querySelector("table");
 		this.playButton = this.root.querySelector(".options .button");

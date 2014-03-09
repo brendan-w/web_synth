@@ -26,10 +26,19 @@
 			<div class="options">
 				<div>
 					<span>BPM</span>
-					<input id="tempo" type="range" min="120" max="720" value="480">
+					<input id="tempo" type="range" min="60" max="720" value="480">
 				</div>
 			</div>
-			<table><tr></tr></table>
+			<table>
+				<tr></tr>
+			</table>
+			<div class="options center">
+				<div class="center">
+					<div id="subBeat" class="button" value="-1">&lt;</div>
+					<span id="numBeats">12</span>
+					<div id="addBeat" class="button" value="1">&gt;</div>
+				</div>
+			</div>
 		</section>
 		<!-- all other tracks get added as sections here -->
 	</div>
@@ -39,11 +48,13 @@
 	</footer>
 
 	<!-- I got sick of making EVERYTHING with JS, so I'm using this as a template -->
-	<div id="hidden">
+	<div id="templates" class="hidden">
 		<!-- HTML for a single track element -->
 		<section class="track">
 			<div class="options">
-				<div class="button true">Play</div>
+				<div>
+					<div class="button true">Play</div>
+				</div>
 				<div>
 					<span>Key</span>
 					<select class="key"></select>
@@ -62,6 +73,9 @@
 				</div>
 			</div>
 			<table></table>
+			<div class="options">
+				
+			</div>
 		</section>
 	</div>
 </body>

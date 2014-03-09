@@ -1,3 +1,46 @@
+
+/*********************** Misc Global ***********************/
+
+h1 {font-size: 20pt;}
+.center {text-align: center;}
+
+/* Had problems with clicking and dragging */
+.button, table *
+{
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.button
+{
+	display:inline-block;
+	font-size: 10pt;
+	background-color: rgb(60,60,60);
+	color:white;
+	border-radius: 3px;
+	text-align: center;
+	width:100%;
+}
+
+.button:hover
+{
+	background-color: rgb(80,80,80);
+	/*background-color: rgb(50,110,50);*/
+	cursor:pointer;
+}
+
+.true { background-color: rgb(50,120,50); }
+.true:hover { background-color: rgb(80,160,80) !important; }
+
+.hidden {display:none;}
+
+
+/*********************** General ***********************/
+
+
 body
 {
 	font-family: Arial, sans-serif;
@@ -17,8 +60,6 @@ body
 	color:white;
 }
 
-h1 {font-size: 20pt;}
-
 header, footer
 {
 	text-align: center;
@@ -37,8 +78,9 @@ footer
 	font-size: 10pt;
 }
 
-#addTrack
+footer .button
 {
+	display:block;
 	margin-left:auto;
 	margin-right:auto;
 	margin-bottom:20px;
@@ -46,41 +88,6 @@ footer
 	height:30px;
 	line-height: 30px;
 }
-
-
-#test
-{
-	margin-left:auto;
-	margin-right:auto;
-	margin-bottom:20px;
-	width:300px;
-	height:30px;
-	line-height: 30px;
-}
-
-#hidden
-{
-	display:none;
-}
-
-.button
-{
-	font-size: 10pt;
-	background-color: rgb(60,60,60);
-	color:white;
-	border-radius: 3px;
-	text-align: center;
-}
-
-.button:hover
-{
-	background-color: rgb(80,80,80);
-	/*background-color: rgb(50,110,50);*/
-	cursor:pointer;
-}
-
-.true { background-color: rgb(50,120,50); }
-.true:hover { background-color: rgb(80,160,80) !important; }
 
 
 /*********************** Sections ***********************/
@@ -120,22 +127,21 @@ section > *
 
 .options > div:last-of-type { margin-bottom:0px; }
 
+
 .options span
 {
-	float:left;
 	display:inline-block;
 	font-size: 11pt;
 	opacity: 0.5;
 }
 
-/* Had problems with clicking and dragging */
-table *
+.options select
 {
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
-	user-select: none;
+	width:8em;
+	color:white;
+	background-color: rgb(60,60,60);
+	border:none;
+	opacity: 0.5;
 }
 
 table td
@@ -151,6 +157,28 @@ table td > div
 }
 
 /*********************** Main ***********************/
+
+#main .button
+{
+	height:18px;
+	line-height: 18px;
+	width:5em;
+}
+
+#subBeat
+{
+	float:left;
+}
+
+#addBeat
+{
+	float:right;
+}
+
+#main .button:active
+{
+	background-color:rgb(50,120,50);
+}
 
 #main input
 {
@@ -176,14 +204,14 @@ table td > div
 	opacity: 0.5;
 }
 
+.track .options span
+{
+	float:left;
+}
+
 .track .options select
 {
 	float:right;
-	width:8em;
-	color:white;
-	background-color: rgb(60,60,60);
-	border:none;
-	opacity: 0.5;
 }
 
 .track .options select:hover
@@ -191,7 +219,7 @@ table td > div
 	opacity: 1;
 }
 
-.track .options > div.button
+.track .options .button
 {
 	height:28px;
 	line-height: 28px;

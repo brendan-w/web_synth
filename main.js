@@ -18,12 +18,40 @@ var currentTimer;
 
 //UI
 var tempoSlider;
+var tempoRow;
 var tempoLights = [];
+var addBeat;
+var subBeat;
+var numBeats
 var addButton;
 
 
+/*
+ * Event Handlers for UI elements
+ */
 
-//tries to get an audio context
+function tempoChanged(e) {
+	beatsPerMinute = e.target.value;
+	start(); //restart, with the new tempo
+}
+
+function beatsChanged(e) {
+	var increment = e.target.getAttribute("value");
+	increment = parseInt(increment);
+	beatsPerMeasure += increment;
+	beatsPerMeasure = Math.clamp(beatsPerMeasure, minBeats, maxBeats);
+	numBeats.innerHTML = beatsPerMeasure;
+	update();
+}
+
+
+
+
+/*
+ * public functions
+ */
+
+//tries to get an audio context, calls init() if successful
 function getAudioContext() {
 	if (typeof AudioContext !== "undefined")
 	{
@@ -57,22 +85,32 @@ function deleteTrack(num) {
 }
 
 
-function updateTracks(e) {
-	
-	//beatsPerMeasure++;
-
+function update(e) {
 	for(var i = 0; i < tracks.length; i++)
 	{
 		tracks[i].update();
 	}
+
+	updateTempoLights();
 }
 
-function tempoChanged() {
-	beatsPerMinute = tempoSlider.value;
-	console.log(beatsPerMinute);
-	start(); //restart, with the new tempo
-}
+function updateTempoLights() {
+	removeChildren(tempoRow);
+	tempoLights = new Array();
 
+	for(var x = 0; x < beatsPerMeasure; x++)
+	{
+		//create the table cell
+		var td = document.createElement("td");
+		tempoRow.appendChild(td);
+		
+		//create the light graphic
+		var light = document.createElement("div");
+		light.setAttribute("x", x);
+		td.appendChild(light);
+		tempoLights[x] = light;
+	}
+}
 
 function start() {
 	if(currentTimer !== undefined)
@@ -84,36 +122,24 @@ function start() {
 
 //main loop for the site, fires on every beat (rate is set by BPM)
 function beat() {
+	//advance the beat number, and loop off the end
+	currentBeat++;
+	currentBeat = currentBeat % beatsPerMeasure;
+
 	tempoLights[currentBeat].className = "true";
-	tempoLights[mod((currentBeat - 1), beatsPerMeasure)].className = "";
+	tempoLights[Math.mod((currentBeat - 1), beatsPerMeasure)].className = "";
 
 	for(var i = 0; i < tracks.length; i++)
 	{
 		tracks[i].beat();
 	}
-
-	//advance the beat number, and loop off the end
-	currentBeat++;
-	currentBeat = currentBeat % beatsPerMeasure;
 }
 
 
 function init() {
-	//initialize the #main setcion
-	var tr = document.querySelector("#main table tr");
 
-	for(var x = 0; x < beatsPerMeasure; x++)
-	{
-		//create the table cell
-		var td = document.createElement("td");
-		tr.appendChild(td);
-		
-		//create the light graphic
-		var light = document.createElement("div");
-		light.setAttribute("x", x);
-		td.appendChild(light);
-		tempoLights[x] = light;
-	}
+	tempoRow = document.querySelector("#main table tr");
+	updateTempoLights();
 
 	//make the button to add more tracks
 	addButton = document.querySelector("#addTrack");
@@ -121,6 +147,14 @@ function init() {
 	
 	tempoSlider = document.querySelector("#tempo");
 	tempoSlider.addEventListener("change", tempoChanged);
+
+	addBeat = document.querySelector("#addBeat");
+	addBeat.addEventListener("click", beatsChanged);
+
+	subBeat = document.querySelector("#subBeat");
+	subBeat.addEventListener("click", beatsChanged);
+
+	numBeats = document.querySelector("#numBeats");
 
 	//make the first track
 	addTrack();
