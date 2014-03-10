@@ -45,8 +45,8 @@ h1 {font-size: 20pt;}
 	width:5em;
 }
 
-.true { background-color: rgb(50,120,50); }
-.true:hover { background-color: rgb(80,160,80) !important; }
+.button.true { background-color: rgb(50,120,50); }
+.button.true:hover { background-color: rgb(80,160,80) !important; }
 
 .hidden {display:none;}
 

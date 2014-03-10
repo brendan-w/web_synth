@@ -5,6 +5,8 @@
  * 
  */
 
+"use strict";
+
 //function that makes a 2D array, and fills it with default values
 function make2D(ny, nx, defaultValue)
 {
@@ -94,21 +96,38 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 }
 
 
-//function for shifting an array up/down/left/right. Values loop
-function shift2D(array, yShift, xShift) {
+//function for shifting an array left/right. Values loop around the end.
+function shift2D(array, xShift) {
 	if(array)
 	{
 		//get the current dimensions of the array
 		var cy = array.length;
 		var cx = array[0].length;
 
-		//var temp = make2D(Math.abs(yShift), Math.abs(xShift), false);
+		var temp = make2D(cy, Math.abs(xShift), false);
 
+		var sx;
+		var ex;
+
+		if(xShift > 0)
+		{
+			sx = cx - xShift - 1;
+			ex = cx
+		}
+		else if(xShift < 0)
+		{
+			sx = 0;
+			ex = xShift + 1;
+		}
+
+		//copy the end values into the temp array
 		for(var y = 0; y < cy; y++)
 		{
-			for(var x = 0; x < cx; x++)
+			var tx = 0
+			for(var x = sx; x < ex; x++)
 			{
-				
+				temp[y][tx] = array[y][x];
+				tx++;
 			}
 		}
 	}
