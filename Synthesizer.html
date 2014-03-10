@@ -26,18 +26,18 @@
 		<section id="main">
 			<div class="options">
 				<div>
-					<span>BPM</span>
-					<input id="tempo" type="range" min="60" max="720" value="480">
+					<span>Tempo</span>
+					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
 				</div>
 			</div>
 			<table>
 				<tr></tr>
 			</table>
-			<div class="options center">
+			<div class="options">
 				<div class="center">
-					<div id="subBeat" class="button" value="-1">&lt;</div>
+					<div id="subBeat" class="left button" value="-1">&lt;</div>
 					<span id="numBeats">12</span>
-					<div id="addBeat" class="button" value="1">&gt;</div>
+					<div id="addBeat" class="right button" value="1">&gt;</div>
 				</div>
 			</div>
 		</section>
@@ -54,26 +54,30 @@
 		<section class="track">
 			<div class="options">
 				<div>
-					<div class="button true">Play</div>
+					<div class="button playButton true">Play</div>
 				</div>
 				<div>
-					<span>Key</span>
-					<select class="key"></select>
+					<span class="left">Key</span>
+					<select class="key right"></select>
 				</div>
 				<div>
-					<span>Octave</span>
-					<select class="octave"></select>
+					<span class="left">Octave</span>
+					<select class="octave right"></select>
 				</div>
 				<div>
-					<span>Scale</span>
-					<select class="scale"></select>
+					<span class="left">Scale</span>
+					<select class="scale right"></select>
 				</div>
 				<div>
-					<span>Tone</span>
-					<select class="tone"></select>
+					<span class="left">Tone</span>
+					<select class="tone right"></select>
 				</div>
 			</div>
-			<table></table>
+			<div class="table">
+				<div class="button shiftLeft">&lt;</div>
+				<table></table>
+				<div class="button shiftRight">&gt;</div>
+			</div>
 			<div class="options">
 				
 			</div>

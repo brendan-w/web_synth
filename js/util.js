@@ -56,7 +56,7 @@ var beatsPerMeasure = 12; //matrix width
 var beatsPerMinute = 480; //120; //speed
 
 var minBeats = 2;
-var maxBeats = 14;
+var maxBeats = 24;
 
 
 
@@ -149,6 +149,7 @@ Math.mod = function(x,n) { return(((x%n)+n)%n); };
 //maps a value from one range to another (useful during animation)
 Math.map = function(x, in_min, in_max, out_min, out_max) { return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min; };
 
+//clamps a number between two values (inclusive)
 Math.clamp = function(number, min, max) { return Math.min(Math.max(number, min), max); };
 
 function floatToBool(float)
@@ -179,7 +180,8 @@ function createWSCurve(amount, n_samples) {
         for (var i = 0; i < n_samples; i+=1) {
             // LINEAR INTERPOLATION: x := (c - a) * (z - y) / (b - a) + y
             // a = 0, b = 2048, z = 1, y = -1, c = i
-            var x = (i - 0) * (1 - (-1)) / (n_samples - 0) + (-1);
+            var x = Math.map(i, 0, n_samples, -1, 1);
+            //var x = (i - 0) * (1 - (-1)) / (n_samples - 0) + (-1);
             wsCurve[i] = (1 + k) * x / (1+ k * Math.abs(x));
         }
    

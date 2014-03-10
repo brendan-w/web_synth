@@ -34,6 +34,8 @@ var Track = function()
 	this.octaveSelect;
 	this.scaleSelect;
 	this.toneSelect;
+	this.shiftLeft;
+	this.shiftRight;
 
 
 
@@ -190,6 +192,18 @@ var Track = function()
 					button.setAttribute("y", y);
 					button.addEventListener("mousedown", _this.matrixClicked);
 					button.addEventListener("mouseenter", _this.matrixRollOver);
+
+					/*
+					//trying to make chrome happy with the click-drag drawing method
+					button.addEventListener("dragstart", function(e){ console.log(e); });
+					button.addEventListener("drag",      function(e){ console.log(e); });
+					button.addEventListener("dragenter", function(e){ console.log(e); });
+					button.addEventListener("dragleave", function(e){ console.log(e); });
+					button.addEventListener("dragover",  function(e){ console.log(e); });
+					button.addEventListener("drop",      function(e){ console.log(e); });
+					button.addEventListener("dragend",   function(e){ console.log(e); });
+					*/
+
 					td.appendChild(button);
 				}
 			}
@@ -245,6 +259,10 @@ var Track = function()
 
 	//click handler for matrix buttons
 	this.matrixClicked = function(e) {
+		//prevents chrome text cursor when dragging
+		e.preventDefault();
+		e.stopPropagation();
+
 		var element = e.target;
 		var x = element.getAttribute("x");
 		var y = element.getAttribute("y");
@@ -264,12 +282,17 @@ var Track = function()
 	};
 
 	this.matrixRollOver = function(e) {
+		//console.log("rolled");
 		//if the mouse is held
 		if((e.button === 0) &&(e.buttons >= 1))
 		{
 			_this.matrixClicked(e);
 		}
 	}
+
+	this.matrixDrag = function(e) {
+		_this.matrixClicked(e);
+	};
 
 	//get values from the key, octave and scale <select>, and update the oscillators
 	this.updateFrequencies = function(e) {
@@ -292,6 +315,10 @@ var Track = function()
 		{						   //bottom = note 0
 			_this.oscillator_nodes[invert(y, notes)].type = type;
 		}
+	};
+
+	this.shiftMatrix = function(e) {
+
 	};
 
 	this.updateVolume = function(e) {
@@ -360,22 +387,27 @@ var Track = function()
 		this.root = document.querySelector("#templates .track").cloneNode(true);
 
 		this.table = this.root.querySelector("table");
-		this.playButton = this.root.querySelector(".options .button");
+		this.playButton = this.root.querySelector(".options .playButton");
 		this.keySelect = this.root.querySelector(".options .key");
 		this.octaveSelect = this.root.querySelector(".options .octave");
 		this.scaleSelect = this.root.querySelector(".options .scale");
 		this.toneSelect = this.root.querySelector(".options .tone");
+		this.shiftLeft = this.root.querySelector(".shiftLeft");
+		this.shiftRight = this.root.querySelector(".shiftRight");
 
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 3);
 		fillSelect(this.scaleSelect, scales, 1);
 		fillSelect(this.toneSelect, tones, 0);
 
+		this.table.addEventListener("mousemove", this.matrixMove);
 		this.playButton.addEventListener("click", this.toggleEnabled);
 		this.keySelect.addEventListener("change", this.updateFrequencies);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);
 		this.scaleSelect.addEventListener("change", this.updateFrequencies);
 		this.toneSelect.addEventListener("change", this.updateTone);
+		this.shiftLeft.addEventListener("click", this.shiftMatrix);
+		this.shiftRight.addEventListener("click", this.shiftMatrix);
 		
 		//make the sequencer matrix & setup the oscillators with their frequencies
 		this.update();
