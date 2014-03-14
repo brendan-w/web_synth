@@ -8,7 +8,7 @@
 
 "use strict";
 
-var Track = function()
+var Track = function(num)
 {
 	var _this = this; //needed because "this" in event handlers refers to the DOM element
 
@@ -30,12 +30,17 @@ var Track = function()
 	this.table;
 	this.patternButtons; // = [][]  (table cells) needed for playback color changes
 	this.playButton;
+	// delete button
+	this.deleteButton;
 	this.keySelect;
 	this.octaveSelect;
 	this.scaleSelect;
 	this.toneSelect;
 	this.shiftLeft;
 	this.shiftRight;
+	
+	// get a number for the track to determine which track it is
+	this.num = num;
 
 
 
@@ -316,9 +321,38 @@ var Track = function()
 			_this.oscillator_nodes[invert(y, notes)].type = type;
 		}
 	};
-
+	
+	// Shifts the matrix left or right
 	this.shiftMatrix = function(e) {
-
+		// Create an empty array
+		var tempMatrix = new Array();
+		for(var y = 0; y < _this.patternButtons.length; y++)
+		{
+			tempMatrix[y] = new Array(); // 2d Array
+			for(var x = 0; x < _this.pattern[y].length; x++)
+			{
+				// Change the temp matrix to reflect the updated pattern
+				if(e.target.id === "left"){
+					if(x === 0)
+						tempMatrix[y][_this.pattern[y].length - 1] = _this.pattern[y][x];
+					else
+						tempMatrix[y][x - 1] = _this.pattern[y][x];
+				}
+				else {
+					if(x === _this.pattern[y].length - 1)
+						tempMatrix[y][0] = _this.pattern[y][x];
+					else
+						tempMatrix[y][x + 1] = _this.pattern[y][x];
+				}
+			}
+			
+		}
+		
+		// set the pattern matrix to the temp
+		_this.pattern = tempMatrix;
+		
+		// update the matrix
+		_this.updateMatrix();
 	};
 
 	this.updateVolume = function(e) {
@@ -332,9 +366,10 @@ var Track = function()
 
 	//self destruct in five, four, three, tw**BOOM**
 	this.destruct = function(e) {
-		//delete display objects
-		document.querySelector("#tracks").removeChild(_this.root);
-
+		//delete display objects based on the track number
+		console.log(document.querySelector("#track" + num));
+		document.querySelector("#tracks").removeChild(document.querySelector("#track" + num));
+		
 		//delete/disconnect audio objects
 		for(var y = 0; y < notes; y++)
 		{
@@ -346,9 +381,11 @@ var Track = function()
 		_this.master_gain_node = undefined;
 		_this.compressor_node = undefined;
 		//etc... for all audio nodes we use
-
+		
+		
+		_this.enabled = false;
 		//delete from tracks list
-		deleteTrack();
+		deleteTrack(num);
 	};
 
 
@@ -388,13 +425,15 @@ var Track = function()
 
 		this.table = this.root.querySelector("table");
 		this.playButton = this.root.querySelector(".options .playButton");
+		// delete button		
+		this.deleteButton = this.root.querySelector(".options .deleteButton");
 		this.keySelect = this.root.querySelector(".options .key");
 		this.octaveSelect = this.root.querySelector(".options .octave");
 		this.scaleSelect = this.root.querySelector(".options .scale");
 		this.toneSelect = this.root.querySelector(".options .tone");
 		this.shiftLeft = this.root.querySelector(".shiftLeft");
 		this.shiftRight = this.root.querySelector(".shiftRight");
-
+		
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 3);
 		fillSelect(this.scaleSelect, scales, 1);
@@ -402,6 +441,8 @@ var Track = function()
 
 		this.table.addEventListener("mousemove", this.matrixMove);
 		this.playButton.addEventListener("click", this.toggleEnabled);
+		// delete button
+		this.deleteButton.addEventListener("click", this.destruct);
 		this.keySelect.addEventListener("change", this.updateFrequencies);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);
 		this.scaleSelect.addEventListener("change", this.updateFrequencies);
@@ -411,6 +452,9 @@ var Track = function()
 		
 		//make the sequencer matrix & setup the oscillators with their frequencies
 		this.update();
+		
+		// add the id to the track based on the track number
+		this.root.setAttribute("id", "track" + num);
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);
