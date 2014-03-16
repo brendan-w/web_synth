@@ -332,13 +332,15 @@ var Track = function(num)
 			for(var x = 0; x < _this.pattern[y].length; x++)
 			{
 				// Change the temp matrix to reflect the updated pattern
-				if(e.target.id === "left"){
+				if(e.target.className.contains('shiftLeft'))
+				{
 					if(x === 0)
 						tempMatrix[y][_this.pattern[y].length - 1] = _this.pattern[y][x];
 					else
 						tempMatrix[y][x - 1] = _this.pattern[y][x];
 				}
-				else {
+				else if(e.target.className.contains('shiftRight'))
+				{
 					if(x === _this.pattern[y].length - 1)
 						tempMatrix[y][0] = _this.pattern[y][x];
 					else
@@ -465,6 +467,7 @@ var Track = function(num)
 	//return only public functions
 	return {
 		beat: this.beat,
-		update: this.update
+		update: this.update,
+		root: this.root
 	};
 };

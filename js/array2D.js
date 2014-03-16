@@ -98,37 +98,5 @@ function resize2D(array, ny, nx, yEnd, xEnd, defaultValue) {
 
 //function for shifting an array left/right. Values loop around the end.
 function shift2D(array, xShift) {
-	if(array)
-	{
-		//get the current dimensions of the array
-		var cy = array.length;
-		var cx = array[0].length;
-
-		var temp = make2D(cy, Math.abs(xShift), false);
-
-		var sx;
-		var ex;
-
-		if(xShift > 0)
-		{
-			sx = cx - xShift - 1;
-			ex = cx
-		}
-		else if(xShift < 0)
-		{
-			sx = 0;
-			ex = xShift + 1;
-		}
-
-		//copy the end values into the temp array
-		for(var y = 0; y < cy; y++)
-		{
-			var tx = 0
-			for(var x = sx; x < ex; x++)
-			{
-				temp[y][tx] = array[y][x];
-				tx++;
-			}
-		}
-	}
+	//
 }

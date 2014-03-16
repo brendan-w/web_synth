@@ -161,17 +161,6 @@ function init() {
 
 	//start it running
 	start();
-
-
-	var array = make2D(3, 3, false);
-
-	array[2][0] = true;
-	array[2][1] = true;
-	array[2][2] = true;
-
-	array = shift2D(array, 1);
-
-	print2D(array);
 }
 
 window.onload = getAudioContext;
