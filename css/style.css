@@ -231,3 +231,13 @@ table td > div
 .track td > div.true { background-color: rgb(50,140,50); }
 .track td > div.false { background-color: rgb(40,60,40); }
 .track td > div.play { background-color: rgb(60,255,60); }
+
+.wave
+{
+	
+}
+
+.wave canvas
+{
+	border:1px solid rgb(50,50,50);
+}

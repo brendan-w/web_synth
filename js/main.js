@@ -117,7 +117,10 @@ function start() {
 	{
 		clearInterval(currentTimer);
 	}
+
+	//start
 	currentTimer = setInterval(beat, getWaitTime());
+	window.requestAnimationFrame(frame);
 }
 
 //main loop for the site, fires on every beat (rate is set by BPM)
@@ -129,10 +132,17 @@ function beat() {
 	tempoLights[currentBeat].className = "true";
 	tempoLights[Math.mod((currentBeat - 1), beatsPerMeasure)].className = "";
 
-	for(var i = 0; i < tracks.length; i++)
-	{
-		tracks[i].beat();
-	}
+	tracks.forEach(function(track) {
+		track.beat();
+	});
+}
+
+function frame() {
+	tracks.forEach(function(track) {
+		track.frame();
+	});
+
+	window.requestAnimationFrame(frame);
 }
 
 

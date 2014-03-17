@@ -4,6 +4,55 @@
  * Class file for an audio track. Each track has its own note grid (this.pattern), and oscillator nodes for each note.
  * This class handles its own UI, so generate your UI HMTL here. Only has one "public" function (beat()) which updates the sound/UI.
  *
+ *
+ * SIGNAL CHAIN ====================
+ *
+ *  ____________     ____________     ____________     ____________ 
+ * |            |   |            |   |            |   |            |
+ * | Oscillator |   | Oscillator |   | Oscillator |   | Oscillator |    ---->    one for each vertical note
+ * |____________|   |____________|   |____________|   |____________|
+ *       |                |                |                |
+ *       |                |                |                |
+ *  _____V______     _____V______     _____V______     _____V______ 
+ * |            |   |            |   |            |   |            |
+ * |    Gain    |   |    Gain    |   |    Gain    |   |    Gain    |    ---->    one for each vertical note
+ * |____________|   |____________|   |____________|   |____________|
+ *       |                |                |                |
+ *       |                |                |                |
+ *       |________________|________________|________________|
+ *                                 |
+ *                                 |
+ *                           ______V_______
+ *                          |              |
+ *                          |  Compressor  |
+ *                          |______________|
+ *                                 |
+ *                                 |
+ *                           ______V_______
+ *                          |              |
+ *                          |  WaveShaper  |
+ *                          |______________|
+ *                                 |
+ *                                 |
+ *                           ______V_______
+ *                          |              |
+ *                          | Master Gain  |
+ *                          |______________|
+ *                                 |
+ *                                 |
+ *                           ______V_______
+ *                          |              |
+ *                          |   Analyzer   |
+ *                          |______________|
+ *                                 |
+ *                                 |
+ *                _________________V__________________
+ *               |                                    |
+ *               |            Destination             |
+ *               |            (in main.js)            |
+ *               |____________________________________|
+ *
+ *
  */
 
 "use strict";
@@ -14,10 +63,11 @@ var Track = function(num)
 
 	//sound stuff
 	this.oscillator_nodes = []; //one oscillator for each pitch
-	this.waveShaper_nodes = []; //distortion and such
 	this.gain_nodes = []; //used to turn notes on & off
-	this.master_gain_node; //only update the note range that you have to
 	this.compressor_node;
+	this.waveShaper_node; //distortion and such
+	this.analyzer_node;
+	this.master_gain_node;
 
 	//running vars
 	this.enabled = false;
@@ -30,7 +80,6 @@ var Track = function(num)
 	this.table;
 	this.patternButtons; // = [][]  (table cells) needed for playback color changes
 	this.playButton;
-	// delete button
 	this.deleteButton;
 	this.keySelect;
 	this.octaveSelect;
@@ -38,6 +87,8 @@ var Track = function(num)
 	this.toneSelect;
 	this.shiftLeft;
 	this.shiftRight;
+	this.canvas;
+	this.canvasCtx;
 	
 	// get a number for the track to determine which track it is
 	this.num = num;
@@ -93,6 +144,27 @@ var Track = function(num)
 		_this.updateFrequencies();
 
 		_this.setEnabled(oldEnable);
+	};
+
+
+	this.frame = function() {
+		var ctx = _this.canvasCtx;
+		
+		var waveform = new Uint8Array(_this.analyzer_node.fftSize);
+		_this.analyzer_node.getByteTimeDomainData(waveform);
+
+		//console.log(waveform[0] / 8);
+
+		ctx.clearRect(0,0,256,32);
+		ctx.beginPath();
+		ctx.moveTo(0, waveform[i] / 8);
+
+		for(var i = 1; i < waveform.length; i++)
+		{
+			ctx.lineTo(i, waveform[i] / 8);
+		}
+
+		ctx.stroke();
 	};
 
 
@@ -197,18 +269,6 @@ var Track = function(num)
 					button.setAttribute("y", y);
 					button.addEventListener("mousedown", _this.matrixClicked);
 					button.addEventListener("mouseenter", _this.matrixRollOver);
-
-					/*
-					//trying to make chrome happy with the click-drag drawing method
-					button.addEventListener("dragstart", function(e){ console.log(e); });
-					button.addEventListener("drag",      function(e){ console.log(e); });
-					button.addEventListener("dragenter", function(e){ console.log(e); });
-					button.addEventListener("dragleave", function(e){ console.log(e); });
-					button.addEventListener("dragover",  function(e){ console.log(e); });
-					button.addEventListener("drop",      function(e){ console.log(e); });
-					button.addEventListener("dragend",   function(e){ console.log(e); });
-					*/
-
 					td.appendChild(button);
 				}
 			}
@@ -395,29 +455,37 @@ var Track = function(num)
 	//constructor--------------------------------------------------------------
 		
 		//SOUND-------------------------------------------
+
+		this.compressor_node =  audioCtx.createDynamicsCompressor();
+		this.waveShaper_node =  audioCtx.createWaveShaper();
+		this.analyzer_node =    audioCtx.createAnalyser();
 		this.master_gain_node = audioCtx.createGain();
 
 		for(var y = 0; y < notes; y++)
 		{
 			this.oscillator_nodes[y] = audioCtx.createOscillator();
-			this.waveShaper_nodes[y] = audioCtx.createWaveShaper();
 			this.gain_nodes[y] = audioCtx.createGain();
 
-			this.oscillator_nodes[y].connect(this.waveShaper_nodes[y]);
-			this.waveShaper_nodes[y].connect(this.gain_nodes[y]);
-			this.gain_nodes[y].connect(this.master_gain_node);
+			this.oscillator_nodes[y].connect(this.gain_nodes[y]);
+			this.gain_nodes[y].connect(this.compressor_node);
 
 			//turn things off BEFORE the oscillators are started
 			this.gain_nodes[y].gain.value = 0;
-			
-			//setDistortion(1);
-			setDistortion(0);
-
-			this.waveShaper_nodes[y].curve = wsCurve;
 			this.oscillator_nodes[y].start(0);
 		}
 
-		this.master_gain_node.connect(destination_node);
+		//zero out the waveshaper
+		setDistortion(0);
+		this.waveShaper_node.curve = wsCurve;
+
+		//set the size of the analyzer
+		this.analyzer_node.fftSize = 256;
+
+		//connect the rest of the signal chain
+		this.compressor_node.connect(this.waveShaper_node);
+		this.waveShaper_node.connect(this.master_gain_node);
+		this.master_gain_node.connect(this.analyzer_node);
+		this.analyzer_node.connect(destination_node);
 
 
 		//HTML--------------------------------------------
@@ -426,8 +494,7 @@ var Track = function(num)
 		this.root = document.querySelector("#templates .track").cloneNode(true);
 
 		this.table = this.root.querySelector("table");
-		this.playButton = this.root.querySelector(".options .playButton");
-		// delete button		
+		this.playButton = this.root.querySelector(".options .playButton");		
 		this.deleteButton = this.root.querySelector(".options .deleteButton");
 		this.keySelect = this.root.querySelector(".options .key");
 		this.octaveSelect = this.root.querySelector(".options .octave");
@@ -435,6 +502,7 @@ var Track = function(num)
 		this.toneSelect = this.root.querySelector(".options .tone");
 		this.shiftLeft = this.root.querySelector(".shiftLeft");
 		this.shiftRight = this.root.querySelector(".shiftRight");
+		this.canvas = this.root.querySelector("canvas");
 		
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 3);
@@ -443,7 +511,6 @@ var Track = function(num)
 
 		this.table.addEventListener("mousemove", this.matrixMove);
 		this.playButton.addEventListener("click", this.toggleEnabled);
-		// delete button
 		this.deleteButton.addEventListener("click", this.destruct);
 		this.keySelect.addEventListener("change", this.updateFrequencies);
 		this.octaveSelect.addEventListener("change", this.updateFrequencies);
@@ -452,6 +519,9 @@ var Track = function(num)
 		this.shiftLeft.addEventListener("click", this.shiftMatrix);
 		this.shiftRight.addEventListener("click", this.shiftMatrix);
 		
+		this.canvasCtx = this.canvas.getContext("2d");
+		this.canvasCtx.strokeStyle = "white";
+
 		//make the sequencer matrix & setup the oscillators with their frequencies
 		this.update();
 		
@@ -468,6 +538,7 @@ var Track = function(num)
 	return {
 		beat: this.beat,
 		update: this.update,
+		frame: this.frame,
 		root: this.root
 	};
 };
