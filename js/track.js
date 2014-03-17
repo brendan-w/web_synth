@@ -57,7 +57,7 @@
 
 "use strict";
 
-var Track = function(num)
+var Track = function(id)
 {
 	var _this = this; //needed because "this" in event handlers refers to the DOM element
 
@@ -91,7 +91,7 @@ var Track = function(num)
 	this.canvasCtx;
 	
 	// get a number for the track to determine which track it is
-	this.num = num;
+	this.id = id;
 
 
 
@@ -429,9 +429,11 @@ var Track = function(num)
 	//self destruct in five, four, three, tw**BOOM**
 	this.destruct = function(e) {
 		//delete display objects based on the track number
-		console.log(document.querySelector("#track" + num));
-		document.querySelector("#tracks").removeChild(document.querySelector("#track" + num));
-		
+
+		//console.log(document.querySelector("#track" + num));
+		//document.querySelector("#tracks").removeChild(document.querySelector("#track" + num));
+		document.querySelector("#tracks").removeChild(_this.root);
+
 		//delete/disconnect audio objects
 		for(var y = 0; y < notes; y++)
 		{
@@ -447,7 +449,7 @@ var Track = function(num)
 		
 		_this.enabled = false;
 		//delete from tracks list
-		deleteTrack(num);
+		deleteTrack(_this.id);
 	};
 
 
@@ -526,7 +528,7 @@ var Track = function(num)
 		this.update();
 		
 		// add the id to the track based on the track number
-		this.root.setAttribute("id", "track" + num);
+		//this.root.setAttribute("id", "track" + num);
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);
@@ -539,6 +541,6 @@ var Track = function(num)
 		beat: this.beat,
 		update: this.update,
 		frame: this.frame,
-		root: this.root
+		id: this.id
 	};
 };

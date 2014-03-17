@@ -198,5 +198,5 @@ function setDistortion(distValue) {
     }
     //dist = distCorrect;
     createWSCurve (distCorrect, nSamples);
-    console.log ("dist is ", dist);
+    //console.log ("dist is ", dist);
 }
