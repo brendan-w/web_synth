@@ -57,7 +57,7 @@
 
 "use strict";
 
-var Track = function(id)
+var Track = function()
 {
 	var _this = this; //needed because "this" in event handlers refers to the DOM element
 
@@ -90,8 +90,8 @@ var Track = function(id)
 	this.canvas;
 	this.canvasCtx;
 	
-	// get a number for the track to determine which track it is
-	this.id = id;
+	//copy of the return object for deletion
+	this.return_obj;
 
 
 
@@ -428,10 +428,6 @@ var Track = function(id)
 
 	//self destruct in five, four, three, tw**BOOM**
 	this.destruct = function(e) {
-		//delete display objects based on the track number
-
-		//console.log(document.querySelector("#track" + num));
-		//document.querySelector("#tracks").removeChild(document.querySelector("#track" + num));
 		document.querySelector("#tracks").removeChild(_this.root);
 
 		//delete/disconnect audio objects
@@ -442,14 +438,15 @@ var Track = function(id)
 			_this.gain_nodes[y] = undefined;
 		}
 
-		_this.master_gain_node = undefined;
 		_this.compressor_node = undefined;
-		//etc... for all audio nodes we use
-		
+		_this.waveShaper_node = undefined;
+		_this.analyzer_node = undefined;
+		_this.master_gain_node = undefined;
 		
 		_this.enabled = false;
+
 		//delete from tracks list
-		deleteTrack(_this.id);
+		deleteTrack(_this.return_obj);
 	};
 
 
@@ -537,10 +534,11 @@ var Track = function(id)
 	//end constructor----------------------------------------------------------
 
 	//return only public functions
-	return {
+	this.return_obj = {
 		beat: this.beat,
 		update: this.update,
-		frame: this.frame,
-		id: this.id
+		frame: this.frame
 	};
+
+	return this.return_obj;
 };

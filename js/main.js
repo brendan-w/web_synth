@@ -76,20 +76,13 @@ function getAudioContext() {
 
 //called by addButton clicks
 function addTrack() {
-	tracks.push(new Track(tracks.length));
+	tracks.push(new Track());
 }
 
 //called by tracks themselves
-function deleteTrack(id) {
-
-	tracks.splice(id, 1);
-
-	for(var i = id; i < tracks.length; i++)
-	{
-		tracks[i].id--;
-	}
-
-	console.log(tracks);
+function deleteTrack(obj) {
+	var i = tracks.indexOf(obj);
+	tracks.splice(i, 1);
 }
 
 
