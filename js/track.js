@@ -155,13 +155,13 @@ var Track = function()
 
 		//console.log(waveform[0] / 8);
 
-		ctx.clearRect(0,0,256,32);
+		ctx.clearRect(0,0,256,128);
 		ctx.beginPath();
-		ctx.moveTo(0, waveform[i] / 8);
+		ctx.moveTo(0, waveform[i] / 2);
 
 		for(var i = 1; i < waveform.length; i++)
 		{
-			ctx.lineTo(i, waveform[i] / 8);
+			ctx.lineTo(i, waveform[i] / 2);
 		}
 
 		ctx.stroke();

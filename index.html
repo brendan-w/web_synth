@@ -24,20 +24,20 @@
 	<div id="tracks">
 		<!-- main section, for settings and such -->
 		<section id="main">
-			<div class="options">
-				<div>
-					<span>Tempo</span>
-					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
+			<div class="options w1">
+				<div class="center">
+					<div id="subBeat" class="left button" value="-1">&lt;</div>
+					<span id="numBeats">12</span>
+					<div id="addBeat" class="right button" value="1">&gt;</div>
 				</div>
 			</div>
 			<table>
 				<tr></tr>
 			</table>
-			<div class="options">
-				<div class="center">
-					<div id="subBeat" class="left button" value="-1">&lt;</div>
-					<span id="numBeats">12</span>
-					<div id="addBeat" class="right button" value="1">&gt;</div>
+			<div class="options w2">
+				<div>
+					<span>Tempo</span>
+					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
 				</div>
 			</div>
 		</section>
@@ -52,10 +52,9 @@
 	<div id="templates" class="hidden">
 		<!-- HTML for a single track element -->
 		<section class="track">
-			<div class="options">
+			<div class="options w1">
 				<div>
 					<div class="button playButton true">Play</div>
-					<div class="button deleteButton">X</div>
 				</div>
 				<div>
 					<span class="left">Key</span>
@@ -79,8 +78,29 @@
 				<table></table>
 				<div class="button shiftRight">&gt;</div>
 			</div>
-			<div class="wave">
-				<canvas width="256" height="32">Please avail yourself of a post-medieval browser</canvas>
+			<div class="options w2">
+				<div>
+					<span>Volume</span>
+					<input id="tempo" class="right" type="range" min="0" max="1" value="0" step="0.01">
+				</div>
+				<div>
+					<span>Distortion</span>
+					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
+				</div>
+				<div>
+					<span>Delay</span>
+					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
+				</div>
+				<div>
+					<span>Reverb</span>
+					<input id="tempo" class="right" type="range" min="60" max="720" value="480">
+				</div>
+				<div>
+					<div class="button deleteButton right">Delete</div>
+				</div>
+			</div>
+			<div>
+				<canvas width="256" height="128">Please avail yourself of a post-medieval browser</canvas>
 			</div>
 		</section>
 	</div>

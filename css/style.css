@@ -42,7 +42,7 @@ h1 {font-size: 20pt;}
 {
 	height:18px;
 	line-height: 18px;
-	width:5em;
+	width:4em;
 }
 
 .button.true { background-color: rgb(50,120,50); }
@@ -123,14 +123,19 @@ section:last-of-type
 
 section > *
 {
-	margin-left:50px;
+	margin-left:30px;
 	display:inline-block;
 	vertical-align: top;
 }
 
-.options
+.w1
 {
-	width:11em;
+	width:10em;
+}
+
+.w2
+{
+	width:14em;
 }
 
 .options > div
@@ -150,7 +155,7 @@ section > *
 
 .options select
 {
-	width:8em;
+	width:7em;
 	color:white;
 	background-color: rgb(60,60,60);
 	border:none;
@@ -164,10 +169,16 @@ section > *
 
 .options input
 {
-	width:9em;
 	display:inline-block;
+	width:11em;
 	margin:0px;
 	padding:0px;
+	opacity: 0.5;
+}
+
+.options input:hover
+{
+	opacity: 1;
 }
 
 table
@@ -202,18 +213,6 @@ table td > div
 
 /*********************** Tracks ***********************/
 
-.playButton
-{
-	float:left;
-	width:10em;
-}
-
-.deleteButton
-{
-	float:right;
-	width:2em;
-}
-
 .table > *
 {
 	vertical-align: top;
@@ -232,12 +231,8 @@ table td > div
 .track td > div.false { background-color: rgb(40,60,40); }
 .track td > div.play { background-color: rgb(60,255,60); }
 
-.wave
-{
-	
-}
-
-.wave canvas
+canvas
 {
 	border:1px solid rgb(50,50,50);
+	background-color: rgba(0,0,0,0.5);
 }
