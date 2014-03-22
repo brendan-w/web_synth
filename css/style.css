@@ -42,7 +42,7 @@ h1 {font-size: 20pt;}
 {
 	height:18px;
 	line-height: 18px;
-	width:4em;
+	width:4.5em;
 }
 
 .button.true { background-color: rgb(50,120,50); }
@@ -212,6 +212,11 @@ table td > div
 
 
 /*********************** Tracks ***********************/
+
+.deleteButton:hover
+{
+	background-color:rgb(200,30,30);
+}
 
 .table > *
 {
