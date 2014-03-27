@@ -338,9 +338,3 @@ SimpleReverb.prototype = Object.create(null, {
   }
 
 });
-
-/**
-* Exports.
-*/
-
-module.exports = SimpleReverb;

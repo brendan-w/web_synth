@@ -401,14 +401,14 @@ var Track = function()
 			for(var x = 0; x < _this.pattern[y].length; x++)
 			{
 				// Change the temp matrix to reflect the updated pattern
-				if(e.target.className.contains('shiftLeft'))
+				if(e.target.className.indexOf('shiftLeft') > -1)
 				{
 					if(x === 0)
 						tempMatrix[y][_this.pattern[y].length - 1] = _this.pattern[y][x];
 					else
 						tempMatrix[y][x - 1] = _this.pattern[y][x];
 				}
-				else if(e.target.className.contains('shiftRight'))
+				else if(e.target.className.indexOf('shiftRight') > -1)
 				{
 					if(x === _this.pattern[y].length - 1)
 						tempMatrix[y][0] = _this.pattern[y][x];

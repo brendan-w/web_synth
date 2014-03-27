@@ -159,6 +159,8 @@ section > *
 	color:white;
 	background-color: rgb(60,60,60);
 	border:none;
+	margin:0px;
+	padding:0px;
 	opacity: 0.5;
 }
 
