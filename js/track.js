@@ -98,6 +98,7 @@ var Track = function()
 	this.shiftRight;
 	this.canvas;
 	this.canvasCtx;
+	this.waveform; //Uint8Array
 	
 	//copy of the return object for deletion
 	this.return_obj;
@@ -158,17 +159,15 @@ var Track = function()
 
 	this.frame = function() {
 		var ctx = _this.canvasCtx;
-		
-		var waveform = new Uint8Array(_this.analyzer_node.fftSize);
+		var waveform = _this.waveform;
+
 		_this.analyzer_node.getByteTimeDomainData(waveform);
 
-		//console.log(waveform[0] / 8);
-
-		ctx.clearRect(0,0,256,128);
+		ctx.clearRect(0,0,128,128);
 		ctx.beginPath();
 		ctx.moveTo(0, waveform[i] / 2);
 
-		for(var i = 1; i < waveform.length; i++)
+		for(var i = 1; i < waveform.length; i+=4)
 		{
 			ctx.lineTo(i, waveform[i] / 2);
 		}
@@ -487,7 +486,8 @@ var Track = function()
 		this.waveShaper_node.curve = wsCurve;
 
 		//set the size of the analyzer
-		this.analyzer_node.fftSize = 256;
+		this.analyzer_node.fftSize = 128;
+		this.waveform = new Uint8Array(this.analyzer_node.fftSize);
 
 		//connect the rest of the signal chain
 		this.compressor_node.connect(this.waveShaper_node);
@@ -534,9 +534,6 @@ var Track = function()
 
 		//make the sequencer matrix & setup the oscillators with their frequencies
 		this.update();
-		
-		// add the id to the track based on the track number
-		//this.root.setAttribute("id", "track" + num);
 
 		//add the finished track to the page
 		document.querySelector("#tracks").appendChild(this.root);

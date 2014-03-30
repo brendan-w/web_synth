@@ -108,6 +108,7 @@ footer .button
 
 section
 {
+	white-space: nowrap;
 	padding-top:8px;
 	padding-bottom:8px;
 	margin-bottom:20px;
@@ -123,6 +124,7 @@ section:last-of-type
 
 section > *
 {
+	white-space: normal;
 	margin-left:30px;
 	display:inline-block;
 	vertical-align: top;
@@ -172,10 +174,19 @@ section > *
 .options input
 {
 	display:inline-block;
-	width:11em;
 	margin:0px;
 	padding:0px;
-	opacity: 0.5;
+	opacity:0.5;
+}
+
+.options input[type="range"]
+{
+	width:11em;
+}
+
+.options input[type="checkbox"]
+{
+	margin-right:5px;
 }
 
 .options input:hover

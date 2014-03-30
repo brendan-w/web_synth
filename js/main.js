@@ -24,6 +24,7 @@ var addBeat;
 var subBeat;
 var numBeats
 var addButton;
+var animated;
 
 
 /*
@@ -55,18 +56,15 @@ function beatsChanged(e) {
 function getAudioContext() {
 	if (typeof AudioContext !== "undefined")
 	{
-		//firefox
-   		audioCtx = new AudioContext();
+   		audioCtx = new AudioContext(); //firefox
 	}
 	else if (typeof webkitAudioContext !== "undefined")
 	{
-		//chrome and safari
-   		audioCtx = new webkitAudioContext();
+   		audioCtx = new webkitAudioContext(); //chrome and safari
 	}
 	else
 	{
    		console.log("couldn't get audio context");
-   		//print html error message
 	}
 
 	destination_node = audioCtx.destination;
@@ -139,9 +137,13 @@ function beat() {
 }
 
 function frame() {
-	tracks.forEach(function(track) {
-		track.frame();
-	});
+
+	if(animated.checked)
+	{
+		tracks.forEach(function(track) {
+			track.frame();
+		});
+	}
 
 	window.requestAnimationFrame(frame);
 }
@@ -166,6 +168,8 @@ function init() {
 	subBeat.addEventListener("click", beatsChanged);
 
 	numBeats = document.querySelector("#numBeats");
+
+	animated = document.querySelector("#animate");
 
 	//make the first track
 	addTrack();
