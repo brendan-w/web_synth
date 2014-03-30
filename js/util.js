@@ -103,6 +103,7 @@ function getFrequency(note, key, octave, scale)
 
 
 function removeChildren(element) {
+  //supposedly faster than .innerHTML = "";
 	while(element.firstChild)
 	{
 		element.removeChild(element.firstChild);
@@ -179,6 +180,9 @@ function setDistortion(curve, amount) {
         curve[i] = (1 + k) * x / (1+ k * Math.abs(x));
     }
 }
+
+
+
 
 
 

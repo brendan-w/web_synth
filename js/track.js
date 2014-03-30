@@ -30,18 +30,6 @@
  *                                 |
  *                           ______V_______
  *                          |              |
- *                          |    Reverb    |
- *                          |______________|
- *                                 |
- *                                 |
- *                           ______V_______
- *                          |              |
- *                          |    Delay     |
- *                          |______________|
- *                                 |
- *                                 |
- *                           ______V_______
- *                          |              |
  *                          | Master Gain  |
  *                          |______________|
  *                                 |
@@ -76,6 +64,7 @@ var Track = function()
 	this.compressor_node;
 	this.waveShaper_node; //distortion and such
 	this.ws_curve;
+	this.reverb_node;
 	this.analyzer_node;
 	this.master_gain_node;
 
