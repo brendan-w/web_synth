@@ -215,6 +215,12 @@ table td > div
 
 /*********************** Tracks ***********************/
 
+.deleteButton
+{
+	height:1.5em;
+	line-height: 1.5em;
+}
+
 .deleteButton:hover
 {
 	background-color:rgb(200,30,30);
