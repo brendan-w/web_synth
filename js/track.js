@@ -427,7 +427,7 @@ var Track = function()
 	};
 
 	this.updateVolume = function(e) {
-
+		_this.master_gain_node.gain.value = e.target.value;
 	};
 
 	this.toggleEnabled = function(e) {
@@ -511,6 +511,7 @@ var Track = function()
 		this.shiftLeft = this.root.querySelector(".shiftLeft");
 		this.shiftRight = this.root.querySelector(".shiftRight");
 		this.canvas = this.root.querySelector("canvas");
+		this.volume = this.root.querySelector("#volume")
 		
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 3);
@@ -526,6 +527,7 @@ var Track = function()
 		this.toneSelect.addEventListener("change", this.updateTone);
 		this.shiftLeft.addEventListener("click", this.shiftMatrix);
 		this.shiftRight.addEventListener("click", this.shiftMatrix);
+		this.volume.addEventListener("change", this.updateVolume);
 		
 		this.canvasCtx = this.canvas.getContext("2d");
 		this.canvasCtx.strokeStyle = "white";
