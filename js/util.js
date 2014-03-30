@@ -159,51 +159,31 @@ function floatToBool(float)
 }
 
 
-//EXPERIMENTAL BEYOND THIS POINT
-
-
+//Waveshaper Distortion
 //https://github.com/janesconference/MorningStar/blob/master/audio/ADNonDescript.js
 //http://blog.chrislowis.co.uk/2013/06/17/synthesis-web-audio-api-envelopes.html
 
-var nSamples = 2048;
-var dist = 0;
-var wsCurve = new Float32Array(nSamples);
-
-function createWSCurve(amount, n_samples) {
+function setDistortion(curve, amount) {
     
-    if ((amount >= 0) && (amount < 1)) {
-        
-        dist = amount;
+    if (amount <= -1) { amount = -0.985; }
+    if (amount >= 1) { amount = 0.985; }
 
-        var k = 2 * dist / (1 - dist);
+    var n_samples = curve.length;
+    var k = 2 * amount / (1 - amount);
 
-        for (var i = 0; i < n_samples; i+=1) {
-            // LINEAR INTERPOLATION: x := (c - a) * (z - y) / (b - a) + y
-            // a = 0, b = 2048, z = 1, y = -1, c = i
-            var x = Math.map(i, 0, n_samples, -1, 1);
-            //var x = (i - 0) * (1 - (-1)) / (n_samples - 0) + (-1);
-            wsCurve[i] = (1 + k) * x / (1+ k * Math.abs(x));
-        }
-   
+    for (var i = 0; i < n_samples; i+=1) {
+        // LINEAR INTERPOLATION: x := (c - a) * (z - y) / (b - a) + y
+        // a = 0, b = 2048, z = 1, y = -1, c = i
+        var x = Math.map(i, 0, n_samples, -1, 1);
+        //var x = (i - 0) * (1 - (-1)) / (n_samples - 0) + (-1);
+        curve[i] = (1 + k) * x / (1+ k * Math.abs(x));
     }
 }
 
-function setDistortion(distValue) {
-    var distCorrect = distValue;
-    if (distValue < -1) {
-        distCorrect = -1;
-    }
-    if (distValue >= 1) {
-        distCorrect = 0.985;
-    }
-    //dist = distCorrect;
-    createWSCurve (distCorrect, nSamples);
-    //console.log ("dist is ", dist);
-}
 
 
-
-//Reverb form https://github.com/web-audio-components/simple-reverb
+//Reverb
+//https://github.com/web-audio-components/simple-reverb
 
 /**
 * Simple Reverb constructor.

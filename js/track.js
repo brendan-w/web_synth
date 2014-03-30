@@ -75,6 +75,7 @@ var Track = function()
 	this.gain_nodes = []; //used to turn notes on & off
 	this.compressor_node;
 	this.waveShaper_node; //distortion and such
+	this.ws_curve;
 	this.analyzer_node;
 	this.master_gain_node;
 
@@ -96,6 +97,8 @@ var Track = function()
 	this.toneSelect;
 	this.shiftLeft;
 	this.shiftRight;
+	this.volume;
+	this.distortion;
 	this.canvas;
 	this.canvasCtx;
 	this.waveform; //Uint8Array
@@ -429,6 +432,11 @@ var Track = function()
 		_this.master_gain_node.gain.value = e.target.value;
 	};
 
+	this.updateDistortion = function(e) {
+		setDistortion(_this.ws_curve, e.target.value);
+		_this.waveShaper_node.curve = _this.ws_curve;
+	};
+
 	this.toggleEnabled = function(e) {
 		_this.setEnabled(!_this.enabled);
 		e.target.classList.toggle("true");
@@ -482,8 +490,9 @@ var Track = function()
 		}
 
 		//zero out the waveshaper
-		setDistortion(0);
-		this.waveShaper_node.curve = wsCurve;
+		this.ws_curve = new Float32Array(2048);
+		setDistortion(this.ws_curve, 0);
+		this.waveShaper_node.curve = this.ws_curve;
 
 		//set the size of the analyzer
 		this.analyzer_node.fftSize = 128;
@@ -511,7 +520,8 @@ var Track = function()
 		this.shiftLeft = this.root.querySelector(".shiftLeft");
 		this.shiftRight = this.root.querySelector(".shiftRight");
 		this.canvas = this.root.querySelector("canvas");
-		this.volume = this.root.querySelector("#volume")
+		this.volume = this.root.querySelector(".volume");
+		this.distortion = this.root.querySelector(".distortion");
 		
 		fillSelect(this.keySelect, keys, 0);
 		fillSelect(this.octaveSelect, octaves, 3);
@@ -528,6 +538,7 @@ var Track = function()
 		this.shiftLeft.addEventListener("click", this.shiftMatrix);
 		this.shiftRight.addEventListener("click", this.shiftMatrix);
 		this.volume.addEventListener("change", this.updateVolume);
+		this.distortion.addEventListener("change", this.updateDistortion);
 		
 		this.canvasCtx = this.canvas.getContext("2d");
 		this.canvasCtx.strokeStyle = "white";
