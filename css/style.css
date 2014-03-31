@@ -1,7 +1,9 @@
 
+@import url(http://fonts.googleapis.com/css?family=Unica+One);
+
 /*********************** Misc Global ***********************/
 
-h1 {font-size: 20pt;}
+h1 { font-family: 'Unica One', 'Arial', sans-serif; font-size: 26pt;}
 .center {text-align: center;}
 
 /* Had problems with clicking and dragging */
