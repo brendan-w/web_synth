@@ -41,6 +41,11 @@
 			</p>
 		</section>
 		<section>
+			<h2>Technical</h2>
+			<p>
+				Under the hood, this site makes heavy use of the Web Audio API. A signal chain composed of oscillators, gain nodes, and waveshaper nodes is used to create the audio. A master timer in the Main.js file advances the current beat on each track, and each track enables and disables the oscillators corresponding to the notes on the sequencer. In order to be polyphonic, each row of the sequencer (each pitch) has its own dedicated oscillator. When the user changes the key or the scale, all of the oscillators are set to new frequencies according to the music theory functionality in Util.js.
+		</section>
+		<section>
 			<h2>Extras</h2>
 			<ul>
 				<li>In-browser sound generation using the the Web Audio API.</li>
